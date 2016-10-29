@@ -16,15 +16,15 @@ import static org.bukkit.event.EventPriority.HIGH;
  */
 public class PriceRatioChecker implements Listener {
 
-    @EventHandler(priority = HIGH)
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        String priceLine = event.getSignLine(PRICE_LINE);
+	@EventHandler(priority = HIGH)
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		String priceLine = event.getSignLine(PRICE_LINE);
 
-        double buyPrice = PriceUtil.getBuyPrice(priceLine);
-        double sellPrice = PriceUtil.getSellPrice(priceLine);
+		double buyPrice = PriceUtil.getBuyPrice(priceLine);
+		double sellPrice = PriceUtil.getSellPrice(priceLine);
 
-        if (hasBuyPrice(priceLine) && hasSellPrice(priceLine) && sellPrice > buyPrice) {
-            event.setOutcome(SELL_PRICE_HIGHER_THAN_BUY_PRICE);
-        }
-    }
+		if (hasBuyPrice(priceLine) && hasSellPrice(priceLine) && sellPrice > buyPrice) {
+			event.setOutcome(SELL_PRICE_HIGHER_THAN_BUY_PRICE);
+		}
+	}
 }

@@ -17,21 +17,21 @@ import org.bukkit.event.Listener;
  */
 public class ResidenceChestProtection implements Listener {
 
-    @EventHandler
-    public static void onProtectionCheck(ProtectionCheckEvent event) {
-        if (event.getResult() == Event.Result.DENY) {
-            return;
-        }
+	@EventHandler
+	public static void onProtectionCheck(ProtectionCheckEvent event) {
+		if (event.getResult() == Event.Result.DENY) {
+			return;
+		}
 
-        Block block = event.getBlock();
-        Player player = event.getPlayer();
-        ResidenceArea area = ResidenceAPI.getResidenceManager().getByLocation(block.getLocation());
+		Block block = event.getBlock();
+		Player player = event.getPlayer();
+		ResidenceArea area = ResidenceAPI.getResidenceManager().getByLocation(block.getLocation());
 
-        if (area != null) {
-            if (!area.allowAction(player.getName(), FlagManager.CONTAINER) && !Residence.getInstance().isAdminMode(player)) {
-                //Doesn't have permissions to that chest.
-                event.setResult(Event.Result.DENY);
-            }
-        }
-    }
+		if (area != null) {
+			if (!area.allowAction(player.getName(), FlagManager.CONTAINER) && !Residence.getInstance().isAdminMode(player)) {
+				//Doesn't have permissions to that chest.
+				event.setResult(Event.Result.DENY);
+			}
+		}
+	}
 }

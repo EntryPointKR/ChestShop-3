@@ -14,102 +14,102 @@ import java.util.UUID;
  * @author Acrobot
  */
 public class CurrencyHoldEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    boolean canHold = true;
+	boolean canHold = true;
 
-    private BigDecimal amount;
-    private UUID account;
-    private World world;
+	private BigDecimal amount;
+	private UUID account;
+	private World world;
 
-    public CurrencyHoldEvent(BigDecimal amount, UUID account, World world) {
-        this.amount = amount;
-        this.account = account;
-        this.world = world;
-    }
+	public CurrencyHoldEvent(BigDecimal amount, UUID account, World world) {
+		this.amount = amount;
+		this.account = account;
+		this.world = world;
+	}
 
-    public CurrencyHoldEvent(BigDecimal amount, Player target) {
-        this(amount, target.getUniqueId(), target.getWorld());
-    }
+	public CurrencyHoldEvent(BigDecimal amount, Player target) {
+		this(amount, target.getUniqueId(), target.getWorld());
+	}
 
-    /**
-     * @return Can the account hold the amount of currency?
-     */
-    public boolean canHold() {
-        return canHold;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * Sets if the account can hold the amount of currency
-     *
-     * @param canHold Can the account hold the currency?
-     */
-    public void canHold(boolean canHold) {
-        this.canHold = canHold;
-    }
+	/**
+	 * @return Can the account hold the amount of currency?
+	 */
+	public boolean canHold() {
+		return canHold;
+	}
 
-    /**
-     * @return Amount of currency
-     */
-    public BigDecimal getAmount() {
-        return amount;
-    }
+	/**
+	 * Sets if the account can hold the amount of currency
+	 *
+	 * @param canHold Can the account hold the currency?
+	 */
+	public void canHold(boolean canHold) {
+		this.canHold = canHold;
+	}
 
-    /**
-     * @return Amount of currency, as a double
-     * @deprecated Use {@link #getAmount()} if possible
-     */
-    public double getDoubleAmount() {
-        return amount.doubleValue();
-    }
+	/**
+	 * @return Amount of currency
+	 */
+	public BigDecimal getAmount() {
+		return amount;
+	}
 
-    /**
-     * Sets the amount of currency to check
-     *
-     * @param amount Amount to check
-     */
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+	/**
+	 * Sets the amount of currency to check
+	 *
+	 * @param amount Amount to check
+	 * @deprecated Use {@link #setAmount(java.math.BigDecimal)} if possible
+	 */
+	public void setAmount(double amount) {
+		this.amount = BigDecimal.valueOf(amount);
+	}
 
-    /**
-     * Sets the amount of currency to check
-     *
-     * @param amount Amount to check
-     * @deprecated Use {@link #setAmount(java.math.BigDecimal)} if possible
-     */
-    public void setAmount(double amount) {
-        this.amount = BigDecimal.valueOf(amount);
-    }
+	/**
+	 * @return Amount of currency, as a double
+	 * @deprecated Use {@link #getAmount()} if possible
+	 */
+	public double getDoubleAmount() {
+		return amount.doubleValue();
+	}
 
-    /**
-     * @return The world in which the check occurs
-     */
-    public World getWorld() {
-        return world;
-    }
+	/**
+	 * Sets the amount of currency to check
+	 *
+	 * @param amount Amount to check
+	 */
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
 
-    /**
-     * @return Account that is checked
-     */
-    public UUID getAccount() {
-        return account;
-    }
+	/**
+	 * @return The world in which the check occurs
+	 */
+	public World getWorld() {
+		return world;
+	}
 
-    /**
-     * Sets the account name
-     *
-     * @param account Account name
-     */
-    public void setAccount(UUID account) {
-        this.account = account;
-    }
+	/**
+	 * @return Account that is checked
+	 */
+	public UUID getAccount() {
+		return account;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	/**
+	 * Sets the account name
+	 *
+	 * @param account Account name
+	 */
+	public void setAccount(UUID account) {
+		this.account = account;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

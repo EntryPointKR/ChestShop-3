@@ -21,88 +21,87 @@ import java.sql.SQLException;
  * @author Acrobot
  */
 public class ItemDatabase {
-    private Dao<Item, Integer> itemDao;
+	private final Yaml yaml;
+	private Dao<Item, Integer> itemDao;
 
-    private final Yaml yaml;
+	public ItemDatabase() {
+		yaml = new Yaml(new YamlBukkitConstructor(), new YamlRepresenter(), new DumperOptions());
 
-    public ItemDatabase() {
-        yaml = new Yaml(new YamlBukkitConstructor(), new YamlRepresenter(), new DumperOptions());
+		try {
+			itemDao = DaoCreator.getDaoAndCreateTable(Item.class);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-        try {
-            itemDao = DaoCreator.getDaoAndCreateTable(Item.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * Gets the item code for this item
+	 *
+	 * @param item Item
+	 * @return Item code for this item
+	 */
+	public String getItemCode(ItemStack item) {
+		try {
+			ItemStack clone = new ItemStack(item);
+			clone.setAmount(1);
+			clone.setDurability((short) 0);
 
-    /**
-     * Gets the item code for this item
-     *
-     * @param item Item
-     * @return Item code for this item
-     */
-    public String getItemCode(ItemStack item) {
-        try {
-            ItemStack clone = new ItemStack(item);
-            clone.setAmount(1);
-            clone.setDurability((short) 0);
+			String code = Base64.encodeObject(yaml.dump(clone));
+			Item itemEntity = itemDao.queryBuilder().where().eq("code", code).queryForFirst();
 
-            String code = Base64.encodeObject(yaml.dump(clone));
-            Item itemEntity = itemDao.queryBuilder().where().eq("code", code).queryForFirst();
+			if (itemEntity != null) {
+				return Base62.encode(itemEntity.getId());
+			}
 
-            if (itemEntity != null) {
-                return Base62.encode(itemEntity.getId());
-            }
+			itemEntity = new Item(code);
 
-            itemEntity = new Item(code);
+			itemDao.create(itemEntity);
 
-            itemDao.create(itemEntity);
+			int id = itemEntity.getId();
 
-            int id = itemEntity.getId();
+			return Base62.encode(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-            return Base62.encode(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		return null;
+	}
 
-        return null;
-    }
+	/**
+	 * Gets an ItemStack from a item code
+	 *
+	 * @param code Item code
+	 * @return ItemStack represented by this code
+	 */
+	public ItemStack getFromCode(String code) {
+		try {
+			int id = Base62.decode(code);
+			Item item = itemDao.queryBuilder().where().eq("id", id).queryForFirst();
 
-    /**
-     * Gets an ItemStack from a item code
-     *
-     * @param code Item code
-     * @return ItemStack represented by this code
-     */
-    public ItemStack getFromCode(String code) {
-        try {
-            int id = Base62.decode(code);
-            Item item = itemDao.queryBuilder().where().eq("id", id).queryForFirst();
+			if (item == null) {
+				return null;
+			}
 
-            if (item == null) {
-                return null;
-            }
+			String serialized = item.getBase64ItemCode();
 
-            String serialized = item.getBase64ItemCode();
+			return yaml.loadAs((String) Base64.decodeToObject(serialized), ItemStack.class);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 
-            return yaml.loadAs((String) Base64.decodeToObject(serialized), ItemStack.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+		return null;
+	}
 
-        return null;
-    }
+	private class YamlBukkitConstructor extends YamlConstructor {
+		public YamlBukkitConstructor() {
+			this.yamlConstructors.put(new Tag(Tag.PREFIX + "org.bukkit.inventory.ItemStack"), yamlConstructors.get(Tag.MAP));
+		}
 
-    private class YamlBukkitConstructor extends YamlConstructor {
-        public YamlBukkitConstructor() {
-            this.yamlConstructors.put(new Tag(Tag.PREFIX + "org.bukkit.inventory.ItemStack"), yamlConstructors.get(Tag.MAP));
-        }
-
-    }
+	}
 }

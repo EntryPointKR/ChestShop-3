@@ -12,14 +12,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  */
 public class PlayerTeleport implements Listener {
 
-    @EventHandler
-    public static void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.getPlayer() == null || event.getPlayer().getOpenInventory() == null) {
-            return;
-        }
+	@EventHandler
+	public static void onPlayerTeleport(PlayerTeleportEvent event) {
+		if (event.getPlayer() == null || event.getPlayer().getOpenInventory() == null) {
+			return;
+		}
 
-        if (event.getPlayer().getOpenInventory().getType() != InventoryType.CRAFTING) {
-            event.getPlayer().closeInventory();
-        }
-    }
+		if (event.getPlayer().getOpenInventory().getType() != InventoryType.CRAFTING) {
+			event.getPlayer().closeInventory();
+		}
+	}
 }

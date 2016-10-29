@@ -24,35 +24,35 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  */
 public class CreationFeeGetter implements Listener {
 
-    @EventHandler
-    public static void onShopCreation(ShopCreatedEvent event) {
-        double shopCreationPrice = Properties.SHOP_CREATION_PRICE;
+	@EventHandler
+	public static void onShopCreation(ShopCreatedEvent event) {
+		double shopCreationPrice = Properties.SHOP_CREATION_PRICE;
 
-        if (shopCreationPrice == 0) {
-            return;
-        }
+		if (shopCreationPrice == 0) {
+			return;
+		}
 
-        if (ChestShopSign.isAdminShop(event.getSignLine(NAME_LINE))) {
-            return;
-        }
+		if (ChestShopSign.isAdminShop(event.getSignLine(NAME_LINE))) {
+			return;
+		}
 
-        Player player = event.getPlayer();
+		Player player = event.getPlayer();
 
-        if (Permission.has(player, NOFEE)) {
-            return;
-        }
+		if (Permission.has(player, NOFEE)) {
+			return;
+		}
 
-        CurrencySubtractEvent subtractionEvent = new CurrencySubtractEvent(BigDecimal.valueOf(shopCreationPrice), player);
-        ChestShop.callEvent(subtractionEvent);
+		CurrencySubtractEvent subtractionEvent = new CurrencySubtractEvent(BigDecimal.valueOf(shopCreationPrice), player);
+		ChestShop.callEvent(subtractionEvent);
 
-        if (!Economy.getServerAccountName().isEmpty()) {
-            CurrencyAddEvent currencyAddEvent = new CurrencyAddEvent(
-                    BigDecimal.valueOf(shopCreationPrice),
-                    NameManager.getUUID(Economy.getServerAccountName()),
-                    player.getWorld());
-            ChestShop.callEvent(currencyAddEvent);
-        }
+		if (!Economy.getServerAccountName().isEmpty()) {
+			CurrencyAddEvent currencyAddEvent = new CurrencyAddEvent(
+					BigDecimal.valueOf(shopCreationPrice),
+					NameManager.getUUID(Economy.getServerAccountName()),
+					player.getWorld());
+			ChestShop.callEvent(currencyAddEvent);
+		}
 
-        player.sendMessage(Messages.prefix(Messages.SHOP_FEE_PAID.replace("%amount", Economy.formatBalance(shopCreationPrice))));
-    }
+		player.sendMessage(Messages.prefix(Messages.SHOP_FEE_PAID.replace("%amount", Economy.formatBalance(shopCreationPrice))));
+	}
 }

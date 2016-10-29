@@ -11,152 +11,152 @@ import org.bukkit.event.HandlerList;
  * @author Acrobot
  */
 public class PreShopCreationEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private Player creator;
+	private Player creator;
 
-    private CreationOutcome outcome = CreationOutcome.SHOP_CREATED_SUCCESSFULLY;
-    private Sign sign;
-    private String[] signLines;
+	private CreationOutcome outcome = CreationOutcome.SHOP_CREATED_SUCCESSFULLY;
+	private Sign sign;
+	private String[] signLines;
 
-    public PreShopCreationEvent(Player creator, Sign sign, String[] signLines) {
-        this.creator = creator;
-        this.sign = sign;
-        this.signLines = signLines.clone();
-    }
+	public PreShopCreationEvent(Player creator, Sign sign, String[] signLines) {
+		this.creator = creator;
+		this.sign = sign;
+		this.signLines = signLines.clone();
+	}
 
-    /**
-     * Returns if event is cancelled
-     *
-     * @return Is event cancelled?
-     */
-    public boolean isCancelled() {
-        return outcome != CreationOutcome.SHOP_CREATED_SUCCESSFULLY;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * Returns the outcome of the event
-     *
-     * @return Event's outcome
-     */
-    public CreationOutcome getOutcome() {
-        return outcome;
-    }
+	/**
+	 * Returns if event is cancelled
+	 *
+	 * @return Is event cancelled?
+	 */
+	public boolean isCancelled() {
+		return outcome != CreationOutcome.SHOP_CREATED_SUCCESSFULLY;
+	}
 
-    /**
-     * Sets the event's outcome
-     *
-     * @param outcome Outcome
-     */
-    public void setOutcome(CreationOutcome outcome) {
-        this.outcome = outcome;
-    }
+	/**
+	 * Returns the outcome of the event
+	 *
+	 * @return Event's outcome
+	 */
+	public CreationOutcome getOutcome() {
+		return outcome;
+	}
 
-    /**
-     * Sets the shop's creator
-     *
-     * @param creator Shop's creator
-     */
-    public void setCreator(Player creator) {
-        this.creator = creator;
-    }
+	/**
+	 * Sets the event's outcome
+	 *
+	 * @param outcome Outcome
+	 */
+	public void setOutcome(CreationOutcome outcome) {
+		this.outcome = outcome;
+	}
 
-    /**
-     * Sets the sign attached to the shop
-     *
-     * @param sign Shop sign
-     */
-    public void setSign(Sign sign) {
-        this.sign = sign;
-    }
+	/**
+	 * Sets the shop's creator
+	 *
+	 * @param creator Shop's creator
+	 */
+	public void setCreator(Player creator) {
+		this.creator = creator;
+	}
 
-    /**
-     * Sets the text on the sign
-     *
-     * @param signLines Text to set
-     */
-    public void setSignLines(String[] signLines) {
-        this.signLines = signLines;
-    }
+	/**
+	 * Sets one of the lines on the sign
+	 *
+	 * @param line Line number to set (0-3)
+	 * @param text Text to set
+	 */
+	public void setSignLine(byte line, String text) {
+		this.signLines[line] = text;
+	}
 
-    /**
-     * Sets one of the lines on the sign
-     *
-     * @param line Line number to set (0-3)
-     * @param text Text to set
-     */
-    public void setSignLine(byte line, String text) {
-        this.signLines[line] = text;
-    }
+	/**
+	 * Returns the shop's creator
+	 *
+	 * @return Shop's creator
+	 */
+	public Player getPlayer() {
+		return creator;
+	}
 
-    /**
-     * Returns the shop's creator
-     *
-     * @return Shop's creator
-     */
-    public Player getPlayer() {
-        return creator;
-    }
+	/**
+	 * Returns the shop's sign
+	 *
+	 * @return Shop's sign
+	 */
+	public Sign getSign() {
+		return sign;
+	}
 
-    /**
-     * Returns the shop's sign
-     *
-     * @return Shop's sign
-     */
-    public Sign getSign() {
-        return sign;
-    }
+	/**
+	 * Sets the sign attached to the shop
+	 *
+	 * @param sign Shop sign
+	 */
+	public void setSign(Sign sign) {
+		this.sign = sign;
+	}
 
-    /**
-     * Returns the text on the sign
-     *
-     * @param line Line number (0-3)
-     * @return Text on the sign
-     */
-    public String getSignLine(byte line) {
-        return signLines[line];
-    }
+	/**
+	 * Returns the text on the sign
+	 *
+	 * @param line Line number (0-3)
+	 * @return Text on the sign
+	 */
+	public String getSignLine(byte line) {
+		return signLines[line];
+	}
 
-    /**
-     * Returns the text on the sign
-     *
-     * @return Text on the sign
-     */
-    public String[] getSignLines() {
-        return signLines;
-    }
+	/**
+	 * Returns the text on the sign
+	 *
+	 * @return Text on the sign
+	 */
+	public String[] getSignLines() {
+		return signLines;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	/**
+	 * Sets the text on the sign
+	 *
+	 * @param signLines Text to set
+	 */
+	public void setSignLines(String[] signLines) {
+		this.signLines = signLines;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    /**
-     * Possible outcomes
-     */
-    public static enum CreationOutcome {
-        INVALID_ITEM,
-        INVALID_PRICE,
-        INVALID_QUANTITY,
+	/**
+	 * Possible outcomes
+	 */
+	public static enum CreationOutcome {
+		INVALID_ITEM,
+		INVALID_PRICE,
+		INVALID_QUANTITY,
 
-        SELL_PRICE_HIGHER_THAN_BUY_PRICE,
+		SELL_PRICE_HIGHER_THAN_BUY_PRICE,
 
-        NO_CHEST,
+		NO_CHEST,
 
-        NO_PERMISSION,
-        NO_PERMISSION_FOR_TERRAIN,
-        NO_PERMISSION_FOR_CHEST,
+		NO_PERMISSION,
+		NO_PERMISSION_FOR_TERRAIN,
+		NO_PERMISSION_FOR_CHEST,
 
-        NOT_ENOUGH_MONEY,
+		NOT_ENOUGH_MONEY,
 
-        /**
-         * For plugin use
-         */
-        OTHER,
+		/**
+		 * For plugin use
+		 */
+		OTHER,
 
-        SHOP_CREATED_SUCCESSFULLY
-    }
+		SHOP_CREATED_SUCCESSFULLY
+	}
 }

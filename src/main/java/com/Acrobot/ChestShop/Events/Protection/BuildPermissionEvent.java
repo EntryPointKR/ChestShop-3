@@ -9,58 +9,58 @@ import org.bukkit.event.HandlerList;
  * @author Acrobot
  */
 public class BuildPermissionEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private Player player;
-    private Location chest, sign;
+	private Player player;
+	private Location chest, sign;
 
-    private int disallowed = 0;
-    private int received = 0;
+	private int disallowed = 0;
+	private int received = 0;
 
-    public BuildPermissionEvent(Player player, Location chest, Location sign) {
-        this.player = player;
-        this.chest = chest;
-        this.sign = sign;
-    }
+	public BuildPermissionEvent(Player player, Location chest, Location sign) {
+		this.player = player;
+		this.chest = chest;
+		this.sign = sign;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public Location getChest() {
-        return chest;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public Location getSign() {
-        return sign;
-    }
+	public Location getChest() {
+		return chest;
+	}
 
-    public void allow() {
-        received++;
-    }
+	public Location getSign() {
+		return sign;
+	}
 
-    public boolean isAllowed() {
-        return disallowed != received || received == 0;
-    }
+	public void allow() {
+		received++;
+	}
 
-    public void allow(boolean yesOrNot) {
-        if (yesOrNot) {
-            allow();
-        } else {
-            disallow();
-        }
-    }
+	public boolean isAllowed() {
+		return disallowed != received || received == 0;
+	}
 
-    public void disallow() {
-        received++;
-        disallowed++;
-    }
+	public void allow(boolean yesOrNot) {
+		if (yesOrNot) {
+			allow();
+		} else {
+			disallow();
+		}
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	public void disallow() {
+		received++;
+		disallowed++;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

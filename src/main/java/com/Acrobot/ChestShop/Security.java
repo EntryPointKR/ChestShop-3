@@ -17,73 +17,73 @@ import org.bukkit.event.Event;
  * @author Acrobot
  */
 public class Security {
-    private static final BlockFace[] SIGN_CONNECTION_FACES = {BlockFace.UP, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
-    private static final BlockFace[] BLOCKS_AROUND = {BlockFace.UP, BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+	private static final BlockFace[] SIGN_CONNECTION_FACES = {BlockFace.UP, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+	private static final BlockFace[] BLOCKS_AROUND = {BlockFace.UP, BlockFace.DOWN, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
 
-    public static boolean protect(Player player, Block block) {
-        ProtectBlockEvent event = new ProtectBlockEvent(block, player);
-        ChestShop.callEvent(event);
+	public static boolean protect(Player player, Block block) {
+		ProtectBlockEvent event = new ProtectBlockEvent(block, player);
+		ChestShop.callEvent(event);
 
-        return event.isProtected();
-    }
+		return event.isProtected();
+	}
 
-    public static boolean canAccess(Player player, Block block) {
-        return canAccess(player, block, false);
-    }
+	public static boolean canAccess(Player player, Block block) {
+		return canAccess(player, block, false);
+	}
 
-    public static boolean canAccess(Player player, Block block, boolean ignoreDefaultProtection) {
-        ProtectionCheckEvent event = new ProtectionCheckEvent(block, player, ignoreDefaultProtection);
-        ChestShop.callEvent(event);
+	public static boolean canAccess(Player player, Block block, boolean ignoreDefaultProtection) {
+		ProtectionCheckEvent event = new ProtectionCheckEvent(block, player, ignoreDefaultProtection);
+		ChestShop.callEvent(event);
 
-        return event.getResult() != Event.Result.DENY;
-    }
+		return event.getResult() != Event.Result.DENY;
+	}
 
-    public static boolean canPlaceSign(Player player, Sign sign) {
-        Block baseBlock = BlockUtil.getAttachedBlock(sign);
+	public static boolean canPlaceSign(Player player, Sign sign) {
+		Block baseBlock = BlockUtil.getAttachedBlock(sign);
 
-        if (!Properties.ALLOW_MULTIPLE_SHOPS_AT_ONE_BLOCK && anotherShopFound(baseBlock, sign.getBlock(), player)) {
-            return false;
-        }
+		if (!Properties.ALLOW_MULTIPLE_SHOPS_AT_ONE_BLOCK && anotherShopFound(baseBlock, sign.getBlock(), player)) {
+			return false;
+		}
 
-        return canBePlaced(player, sign.getBlock());
-    }
+		return canBePlaced(player, sign.getBlock());
+	}
 
-    private static boolean canBePlaced(Player player, Block sign) {
-        for (BlockFace face : BLOCKS_AROUND) {
-            Block block = sign.getRelative(face);
+	private static boolean canBePlaced(Player player, Block sign) {
+		for (BlockFace face : BLOCKS_AROUND) {
+			Block block = sign.getRelative(face);
 
-            if (!BlockUtil.isChest(block)) {
-                continue;
-            }
-            if (!canAccess(player, block)) {
-                return false;
-            }
-        }
+			if (!BlockUtil.isChest(block)) {
+				continue;
+			}
+			if (!canAccess(player, block)) {
+				return false;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    private static boolean anotherShopFound(Block baseBlock, Block signBlock, Player player) {
-        String playerName = NameManager.getUsername(player.getUniqueId());
-        String shortName = NameUtil.stripUsername(playerName);
+	private static boolean anotherShopFound(Block baseBlock, Block signBlock, Player player) {
+		String playerName = NameManager.getUsername(player.getUniqueId());
+		String shortName = NameUtil.stripUsername(playerName);
 
-        for (BlockFace face : SIGN_CONNECTION_FACES) {
-            Block block = baseBlock.getRelative(face);
+		for (BlockFace face : SIGN_CONNECTION_FACES) {
+			Block block = baseBlock.getRelative(face);
 
-            if (block.equals(signBlock) || !BlockUtil.isSign(block)) {
-                continue;
-            }
+			if (block.equals(signBlock) || !BlockUtil.isSign(block)) {
+				continue;
+			}
 
-            Sign sign = (Sign) block.getState();
+			Sign sign = (Sign) block.getState();
 
-            if (!ChestShopSign.isValid(sign) || !BlockUtil.getAttachedBlock(sign).equals(baseBlock)) {
-                continue;
-            }
+			if (!ChestShopSign.isValid(sign) || !BlockUtil.getAttachedBlock(sign).equals(baseBlock)) {
+				continue;
+			}
 
-            if (!sign.getLine(ChestShopSign.NAME_LINE).equals(shortName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+			if (!sign.getLine(ChestShopSign.NAME_LINE).equals(shortName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

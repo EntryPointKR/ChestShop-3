@@ -13,23 +13,23 @@ import org.bukkit.event.Listener;
  * @author Acrobot
  */
 public class Lockette implements Listener {
-    @EventHandler
-    public static void onProtectionCheck(ProtectionCheckEvent event) {
-        if (event.getResult() == Event.Result.DENY) {
-            return;
-        }
+	@EventHandler
+	public static void onProtectionCheck(ProtectionCheckEvent event) {
+		if (event.getResult() == Event.Result.DENY) {
+			return;
+		}
 
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
 
-        if (!org.yi.acru.bukkit.Lockette.Lockette.isProtected(block)) {
-            return;
-        }
+		if (!org.yi.acru.bukkit.Lockette.Lockette.isProtected(block)) {
+			return;
+		}
 
-        String shortPlayerName = NameUtil.stripUsername(NameManager.getUsername(player.getUniqueId()));
+		String shortPlayerName = NameUtil.stripUsername(NameManager.getUsername(player.getUniqueId()));
 
-        if (!org.yi.acru.bukkit.Lockette.Lockette.isUser(block, shortPlayerName, true)) {
-            event.setResult(Event.Result.DENY);
-        }
-    }
+		if (!org.yi.acru.bukkit.Lockette.Lockette.isUser(block, shortPlayerName, true)) {
+			event.setResult(Event.Result.DENY);
+		}
+	}
 }

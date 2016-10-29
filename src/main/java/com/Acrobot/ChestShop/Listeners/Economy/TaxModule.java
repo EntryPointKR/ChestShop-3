@@ -17,39 +17,39 @@ import java.util.UUID;
  */
 public class TaxModule implements Listener {
 
-    private static BigDecimal getTax(BigDecimal price, float taxAmount) {
-        return price.multiply(BigDecimal.valueOf(taxAmount).divide(BigDecimal.valueOf(100), BigDecimal.ROUND_DOWN));
-    }
+	private static BigDecimal getTax(BigDecimal price, float taxAmount) {
+		return price.multiply(BigDecimal.valueOf(taxAmount).divide(BigDecimal.valueOf(100), BigDecimal.ROUND_DOWN));
+	}
 
-    private static boolean isServerAccount(UUID name) {
-        return NameManager.isAdminShop(name);
-    }
+	private static boolean isServerAccount(UUID name) {
+		return NameManager.isAdminShop(name);
+	}
 
-    @EventHandler(priority = EventPriority.LOW)
-    public static void onCurrencyAdd(CurrencyAddEvent event) {
-        if (event.isAdded()) {
-            return;
-        }
+	@EventHandler(priority = EventPriority.LOW)
+	public static void onCurrencyAdd(CurrencyAddEvent event) {
+		if (event.isAdded()) {
+			return;
+		}
 
-        UUID target = event.getTarget();
+		UUID target = event.getTarget();
 
-        if (NameManager.getUsername(target).equals(Economy.getServerAccountName())) {
-            return;
-        }
+		if (NameManager.getUsername(target).equals(Economy.getServerAccountName())) {
+			return;
+		}
 
-        float taxAmount = isServerAccount(target) ? Properties.SERVER_TAX_AMOUNT : Properties.TAX_AMOUNT;
+		float taxAmount = isServerAccount(target) ? Properties.SERVER_TAX_AMOUNT : Properties.TAX_AMOUNT;
 
-        if (taxAmount == 0) {
-            return;
-        }
+		if (taxAmount == 0) {
+			return;
+		}
 
-        BigDecimal tax = getTax(event.getAmount(), taxAmount);
+		BigDecimal tax = getTax(event.getAmount(), taxAmount);
 
-        if (!Economy.getServerAccountName().isEmpty()) {
-            CurrencyAddEvent currencyAddEvent = new CurrencyAddEvent(tax, NameManager.getUUID(Economy.getServerAccountName()), event.getWorld());
-            ChestShop.callEvent(currencyAddEvent);
-        }
+		if (!Economy.getServerAccountName().isEmpty()) {
+			CurrencyAddEvent currencyAddEvent = new CurrencyAddEvent(tax, NameManager.getUUID(Economy.getServerAccountName()), event.getWorld());
+			ChestShop.callEvent(currencyAddEvent);
+		}
 
-        event.setAmount(event.getAmount().subtract(tax));
-    }
+		event.setAmount(event.getAmount().subtract(tax));
+	}
 }

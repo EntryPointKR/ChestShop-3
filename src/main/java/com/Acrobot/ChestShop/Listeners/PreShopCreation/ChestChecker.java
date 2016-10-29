@@ -21,29 +21,29 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  */
 public class ChestChecker implements Listener {
 
-    @EventHandler(priority = EventPriority.LOW)
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        String nameLine = event.getSignLine(NAME_LINE);
+	@EventHandler(priority = EventPriority.LOW)
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		String nameLine = event.getSignLine(NAME_LINE);
 
-        if (ChestShopSign.isAdminShop(nameLine)) {
-            return;
-        }
+		if (ChestShopSign.isAdminShop(nameLine)) {
+			return;
+		}
 
-        Chest connectedChest = uBlock.findConnectedChest(event.getSign().getBlock());
+		Chest connectedChest = uBlock.findConnectedChest(event.getSign().getBlock());
 
-        if (connectedChest == null) {
-            event.setOutcome(NO_CHEST);
-            return;
-        }
+		if (connectedChest == null) {
+			event.setOutcome(NO_CHEST);
+			return;
+		}
 
-        Player player = event.getPlayer();
+		Player player = event.getPlayer();
 
-        if (Permission.has(player, ADMIN)) {
-            return;
-        }
+		if (Permission.has(player, ADMIN)) {
+			return;
+		}
 
-        if (!Security.canAccess(player, connectedChest.getBlock())) {
-            event.setOutcome(NO_PERMISSION_FOR_CHEST);
-        }
-    }
+		if (!Security.canAccess(player, connectedChest.getBlock())) {
+			event.setOutcome(NO_PERMISSION_FOR_CHEST);
+		}
+	}
 }

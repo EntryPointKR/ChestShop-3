@@ -18,54 +18,54 @@ import static com.Acrobot.ChestShop.Configuration.Messages.iteminfo;
  * @author Acrobot
  */
 public class ItemInfo implements CommandExecutor {
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        ItemStack item;
+	private static String getNameAndID(ItemStack item) {
+		String itemName = MaterialUtil.getName(item);
 
-        if (args.length == 0) {
-            if (!(sender instanceof HumanEntity)) {
-                return false;
-            }
+		return ChatColor.GRAY + itemName + ChatColor.WHITE + "      " + item.getTypeId();
+	}
 
-            item = ((HumanEntity) sender).getItemInHand();
-        } else {
-            item = MaterialUtil.getItem(StringUtil.joinArray(args));
-        }
+	private static String getDurability(ItemStack item) {
+		if (item.getDurability() != 0) {
+			return ChatColor.DARK_GREEN + ":" + Integer.toString(item.getDurability());
+		} else {
+			return "";
+		}
+	}
 
-        if (MaterialUtil.isEmpty(item)) {
-            return false;
-        }
+	private static String getMetadata(ItemStack item) {
+		if (!item.hasItemMeta()) {
+			return "";
+		}
 
-        String durability = getDurability(item);
-        String metadata = getMetadata(item);
+		return ChatColor.GOLD + "#" + MaterialUtil.Metadata.getItemCode(item);
+	}
 
-        sender.sendMessage(Messages.prefix(iteminfo));
-        sender.sendMessage(getNameAndID(item) + durability + metadata + ChatColor.WHITE);
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		ItemStack item;
 
-        ItemInfoEvent event = new ItemInfoEvent(sender, item);
-        ChestShop.callEvent(event);
+		if (args.length == 0) {
+			if (!(sender instanceof HumanEntity)) {
+				return false;
+			}
 
-        return true;
-    }
+			item = ((HumanEntity) sender).getItemInHand();
+		} else {
+			item = MaterialUtil.getItem(StringUtil.joinArray(args));
+		}
 
-    private static String getNameAndID(ItemStack item) {
-        String itemName = MaterialUtil.getName(item);
+		if (MaterialUtil.isEmpty(item)) {
+			return false;
+		}
 
-        return ChatColor.GRAY + itemName + ChatColor.WHITE + "      " + item.getTypeId();
-    }
+		String durability = getDurability(item);
+		String metadata = getMetadata(item);
 
-    private static String getDurability(ItemStack item) {
-        if (item.getDurability() != 0) {
-            return ChatColor.DARK_GREEN + ":" + Integer.toString(item.getDurability());
-        } else {
-            return "";
-        }
-    }
+		sender.sendMessage(Messages.prefix(iteminfo));
+		sender.sendMessage(getNameAndID(item) + durability + metadata + ChatColor.WHITE);
 
-    private static String getMetadata(ItemStack item) {
-        if (!item.hasItemMeta()) {
-            return "";
-        }
+		ItemInfoEvent event = new ItemInfoEvent(sender, item);
+		ChestShop.callEvent(event);
 
-        return ChatColor.GOLD + "#" + MaterialUtil.Metadata.getItemCode(item);
-    }
+		return true;
+	}
 }

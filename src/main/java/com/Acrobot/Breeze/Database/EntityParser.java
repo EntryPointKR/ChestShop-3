@@ -15,55 +15,55 @@ import java.util.List;
  * @author Acrobot
  */
 public class EntityParser {
-    private Class<?> entity;
+	private Class<?> entity;
 
-    public EntityParser(Class<?> table) {
-        if (!table.isAnnotationPresent(Entity.class) || !table.isAnnotationPresent(javax.persistence.Table.class)) {
-            throw new AnnotationFormatError("The class hasn't got Entity or Table annotation!");
-        }
+	public EntityParser(Class<?> table) {
+		if (!table.isAnnotationPresent(Entity.class) || !table.isAnnotationPresent(javax.persistence.Table.class)) {
+			throw new AnnotationFormatError("The class hasn't got Entity or Table annotation!");
+		}
 
-        entity = table;
-    }
+		entity = table;
+	}
 
-    /**
-     * Parses the class' fields to a standard SQL format
-     *
-     * @return SQLed class
-     */
-    public String parseToString() {
-        List<String> fields = new LinkedList<String>();
+	/**
+	 * Converts a field type to SQL type
+	 *
+	 * @param field Java's field
+	 * @return SQL type
+	 */
+	public static String convertToSQL(Field field) {
+		String sqlType = field.getName();
+		Class<?> type = field.getType();
 
-        for (Field field : entity.getDeclaredFields()) {
-            fields.add(convertToSQL(field));
-        }
+		if (type.isAssignableFrom(boolean.class)) {
+			sqlType += " BOOLEAN";
+		} else if (type.isAssignableFrom(int.class)) {
+			sqlType += " INTEGER";
+		} else if (type.isAssignableFrom(double.class) || type.isAssignableFrom(float.class)) {
+			sqlType += " REAL";
+		} else {
+			sqlType += " TEXT";
+		}
 
-        return Joiner.on(',').join(fields);
-    }
+		if (field.isAnnotationPresent(Id.class)) {
+			sqlType += " PRIMARY KEY";
+		}
 
-    /**
-     * Converts a field type to SQL type
-     *
-     * @param field Java's field
-     * @return SQL type
-     */
-    public static String convertToSQL(Field field) {
-        String sqlType = field.getName();
-        Class<?> type = field.getType();
+		return sqlType;
+	}
 
-        if (type.isAssignableFrom(boolean.class)) {
-            sqlType += " BOOLEAN";
-        } else if (type.isAssignableFrom(int.class)) {
-            sqlType += " INTEGER";
-        } else if (type.isAssignableFrom(double.class) || type.isAssignableFrom(float.class)) {
-            sqlType += " REAL";
-        } else {
-            sqlType += " TEXT";
-        }
+	/**
+	 * Parses the class' fields to a standard SQL format
+	 *
+	 * @return SQLed class
+	 */
+	public String parseToString() {
+		List<String> fields = new LinkedList<String>();
 
-        if (field.isAnnotationPresent(Id.class)) {
-            sqlType += " PRIMARY KEY";
-        }
+		for (Field field : entity.getDeclaredFields()) {
+			fields.add(convertToSQL(field));
+		}
 
-        return sqlType;
-    }
+		return Joiner.on(',').join(fields);
+	}
 }

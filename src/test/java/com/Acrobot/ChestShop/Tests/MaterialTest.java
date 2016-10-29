@@ -17,11 +17,11 @@ import static org.junit.Assert.assertTrue;
 @RunWith(JUnit4.class)
 public class MaterialTest {
 
-    @Test
-    public void testForBlank() {
-        ItemStack air = new ItemStack(Material.AIR);
+	@Test
+	public void testForBlank() {
+		ItemStack air = new ItemStack(Material.AIR);
 
-        assertTrue(MaterialUtil.isEmpty(air));
-        assertTrue(MaterialUtil.isEmpty(null));
-    }
+		assertTrue(MaterialUtil.isEmpty(air));
+		assertTrue(MaterialUtil.isEmpty(null));
+	}
 }

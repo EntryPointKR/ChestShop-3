@@ -10,39 +10,37 @@ import org.bukkit.event.HandlerList;
  * @author Acrobot
  */
 public class ProtectBlockEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
+	boolean isProtected = false;
+	private Player player;
+	private Block block;
 
-    private Player player;
-    private Block block;
+	public ProtectBlockEvent(Block block, Player player) {
+		this.block = block;
+		this.player = player;
+	}
 
-    boolean isProtected = false;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public ProtectBlockEvent(Block block, Player player) {
-        this.block = block;
-        this.player = player;
-    }
+	public boolean isProtected() {
+		return isProtected;
+	}
 
-    public boolean isProtected() {
-        return isProtected;
-    }
+	public void setProtected(boolean yesOrNo) {
+		isProtected = yesOrNo;
+	}
 
-    public void setProtected(boolean yesOrNo) {
-        isProtected = yesOrNo;
-    }
+	public Block getBlock() {
+		return block;
+	}
 
-    public Block getBlock() {
-        return block;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

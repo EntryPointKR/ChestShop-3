@@ -16,14 +16,14 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  */
 public class NameChecker implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        String name = event.getSignLine(NAME_LINE);
-        Player player = event.getPlayer();
+	@EventHandler(priority = EventPriority.LOWEST)
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		String name = event.getSignLine(NAME_LINE);
+		Player player = event.getPlayer();
 
-        if (name.isEmpty() || (!NameManager.canUseName(player, name) && !Permission.has(player, Permission.ADMIN))) {
-            String shortName = NameUtil.stripUsername(NameManager.getUsername(player.getUniqueId()));
-            event.setSignLine(NAME_LINE, shortName);
-        }
-    }
+		if (name.isEmpty() || (!NameManager.canUseName(player, name) && !Permission.has(player, Permission.ADMIN))) {
+			String shortName = NameUtil.stripUsername(NameManager.getUsername(player.getUniqueId()));
+			event.setSignLine(NAME_LINE, shortName);
+		}
+	}
 }

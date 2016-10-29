@@ -11,13 +11,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerLeave implements Listener {
 
-    @EventHandler
-    public static void onPlayerLeave(PlayerQuitEvent event) {
-        if (Toggle.isIgnoring(event.getPlayer())) {
-            Toggle.setIgnoring(event.getPlayer(), false);
-        }
+	@EventHandler
+	public static void onPlayerLeave(PlayerQuitEvent event) {
+		if (Toggle.isIgnoring(event.getPlayer())) {
+			Toggle.setIgnoring(event.getPlayer(), false);
+		}
 
-        NameManager.dropUsername(event.getPlayer());
-    }
+		NameManager.dropUsername(event.getPlayer());
+	}
 
 }

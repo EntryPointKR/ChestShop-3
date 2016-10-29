@@ -20,49 +20,49 @@ import static com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType.SELL
  */
 public class AmountAndPriceChecker implements Listener {
 
-    @EventHandler
-    public static void onBuyItemCheck(PreTransactionEvent event) {
-        if (event.isCancelled() || event.getTransactionType() != BUY) {
-            return;
-        }
+	@EventHandler
+	public static void onBuyItemCheck(PreTransactionEvent event) {
+		if (event.isCancelled() || event.getTransactionType() != BUY) {
+			return;
+		}
 
-        ItemStack[] stock = event.getStock();
-        Inventory ownerInventory = event.getOwnerInventory();
+		ItemStack[] stock = event.getStock();
+		Inventory ownerInventory = event.getOwnerInventory();
 
-        CurrencyCheckEvent currencyCheckEvent = new CurrencyCheckEvent(BigDecimal.valueOf(event.getPrice()), event.getClient());
-        ChestShop.callEvent(currencyCheckEvent);
+		CurrencyCheckEvent currencyCheckEvent = new CurrencyCheckEvent(BigDecimal.valueOf(event.getPrice()), event.getClient());
+		ChestShop.callEvent(currencyCheckEvent);
 
-        if (!currencyCheckEvent.hasEnough()) {
-            event.setCancelled(CLIENT_DOES_NOT_HAVE_ENOUGH_MONEY);
-            return;
-        }
+		if (!currencyCheckEvent.hasEnough()) {
+			event.setCancelled(CLIENT_DOES_NOT_HAVE_ENOUGH_MONEY);
+			return;
+		}
 
-        if (!InventoryUtil.hasItems(stock, ownerInventory)) {
-            event.setCancelled(NOT_ENOUGH_STOCK_IN_CHEST);
-        }
-    }
+		if (!InventoryUtil.hasItems(stock, ownerInventory)) {
+			event.setCancelled(NOT_ENOUGH_STOCK_IN_CHEST);
+		}
+	}
 
-    @EventHandler
-    public static void onSellItemCheck(PreTransactionEvent event) {
-        if (event.isCancelled() || event.getTransactionType() != SELL) {
-            return;
-        }
+	@EventHandler
+	public static void onSellItemCheck(PreTransactionEvent event) {
+		if (event.isCancelled() || event.getTransactionType() != SELL) {
+			return;
+		}
 
-        ItemStack[] stock = event.getStock();
-        Inventory clientInventory = event.getClientInventory();
+		ItemStack[] stock = event.getStock();
+		Inventory clientInventory = event.getClientInventory();
 
-        CurrencyCheckEvent currencyCheckEvent = new CurrencyCheckEvent(BigDecimal.valueOf(event.getPrice()),
-                                                        event.getOwner().getUniqueId(),
-                                                        event.getSign().getWorld());
-        ChestShop.callEvent(currencyCheckEvent);
+		CurrencyCheckEvent currencyCheckEvent = new CurrencyCheckEvent(BigDecimal.valueOf(event.getPrice()),
+				event.getOwner().getUniqueId(),
+				event.getSign().getWorld());
+		ChestShop.callEvent(currencyCheckEvent);
 
-        if (!currencyCheckEvent.hasEnough()) {
-            event.setCancelled(SHOP_DOES_NOT_HAVE_ENOUGH_MONEY);
-            return;
-        }
+		if (!currencyCheckEvent.hasEnough()) {
+			event.setCancelled(SHOP_DOES_NOT_HAVE_ENOUGH_MONEY);
+			return;
+		}
 
-        if (!InventoryUtil.hasItems(stock, clientInventory)) {
-            event.setCancelled(NOT_ENOUGH_STOCK_IN_INVENTORY);
-        }
-    }
+		if (!InventoryUtil.hasItems(stock, clientInventory)) {
+			event.setCancelled(NOT_ENOUGH_STOCK_IN_INVENTORY);
+		}
+	}
 }

@@ -18,35 +18,35 @@ import org.bukkit.event.Listener;
  * @author Acrobot
  */
 public class WorldGuardProtection implements Listener {
-    private WorldGuardPlugin worldGuard;
+	private WorldGuardPlugin worldGuard;
 
-    public WorldGuardProtection(WorldGuardPlugin worldGuard) {
-        this.worldGuard = worldGuard;
-    }
+	public WorldGuardProtection(WorldGuardPlugin worldGuard) {
+		this.worldGuard = worldGuard;
+	}
 
-    @EventHandler
-    public void onProtectionCheck(ProtectionCheckEvent event) {
-        if (event.getResult() == Event.Result.DENY) {
-            return;
-        }
+	@EventHandler
+	public void onProtectionCheck(ProtectionCheckEvent event) {
+		if (event.getResult() == Event.Result.DENY) {
+			return;
+		}
 
-        Block block = event.getBlock();
-        Player player = event.getPlayer();
+		Block block = event.getBlock();
+		Player player = event.getPlayer();
 
-        Vector blockPos = BukkitUtil.toVector(block);
-        RegionManager manager = worldGuard.getRegionManager(block.getWorld());
-        ApplicableRegionSet set = manager.getApplicableRegions(blockPos);
+		Vector blockPos = BukkitUtil.toVector(block);
+		RegionManager manager = worldGuard.getRegionManager(block.getWorld());
+		ApplicableRegionSet set = manager.getApplicableRegions(blockPos);
 
-        LocalPlayer localPlayer = worldGuard.wrapPlayer(player);
+		LocalPlayer localPlayer = worldGuard.wrapPlayer(player);
 
-        if (!canAccess(localPlayer, block, set)) {
-            event.setResult(Event.Result.DENY);
-        }
-    }
+		if (!canAccess(localPlayer, block, set)) {
+			event.setResult(Event.Result.DENY);
+		}
+	}
 
-    private boolean canAccess(LocalPlayer player, Block block, ApplicableRegionSet set) {
-        return worldGuard.getGlobalRegionManager().hasBypass(player, block.getWorld())
-                || set.testState(player, DefaultFlag.BUILD)
-                || set.testState(player, DefaultFlag.CHEST_ACCESS);
-    }
+	private boolean canAccess(LocalPlayer player, Block block, ApplicableRegionSet set) {
+		return worldGuard.getGlobalRegionManager().hasBypass(player, block.getWorld())
+				|| set.testState(player, DefaultFlag.BUILD)
+				|| set.testState(player, DefaultFlag.CHEST_ACCESS);
+	}
 }

@@ -17,194 +17,192 @@ import static com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType;
  * @author Acrobot
  */
 public class PreTransactionEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private final Player client;
-    private OfflinePlayer owner;
+	private final Player client;
+	private final TransactionType transactionType;
+	private final Sign sign;
+	private OfflinePlayer owner;
+	private Inventory ownerInventory;
+	private Inventory clientInventory;
 
-    private final TransactionType transactionType;
-    private final Sign sign;
+	private ItemStack[] items;
+	private double price;
 
-    private Inventory ownerInventory;
-    private Inventory clientInventory;
+	private TransactionOutcome transactionOutcome = TRANSACTION_SUCCESFUL;
 
-    private ItemStack[] items;
-    private double price;
+	public PreTransactionEvent(Inventory ownerInventory, Inventory clientInventory, ItemStack[] items, double price, Player client, OfflinePlayer owner, Sign sign, TransactionType type) {
+		this.ownerInventory = ownerInventory;
+		this.clientInventory = (clientInventory == null ? client.getInventory() : clientInventory);
 
-    private TransactionOutcome transactionOutcome = TRANSACTION_SUCCESFUL;
+		this.items = items;
+		this.price = price;
 
-    public PreTransactionEvent(Inventory ownerInventory, Inventory clientInventory, ItemStack[] items, double price, Player client, OfflinePlayer owner, Sign sign, TransactionType type) {
-        this.ownerInventory = ownerInventory;
-        this.clientInventory = (clientInventory == null ? client.getInventory() : clientInventory);
+		this.client = client;
+		this.owner = owner;
 
-        this.items = items;
-        this.price = price;
+		this.sign = sign;
+		this.transactionType = type;
+	}
 
-        this.client = client;
-        this.owner = owner;
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-        this.sign = sign;
-        this.transactionType = type;
-    }
+	/**
+	 * @return Shop's sign
+	 */
+	public Sign getSign() {
+		return sign;
+	}
 
-    /**
-     * @return Shop's sign
-     */
-    public Sign getSign() {
-        return sign;
-    }
+	/**
+	 * @return Total price of the items
+	 */
+	public double getPrice() {
+		return price;
+	}
 
-    /**
-     * @return Total price of the items
-     */
-    public double getPrice() {
-        return price;
-    }
+	/**
+	 * Sets the price of the items
+	 *
+	 * @param price Price of the items
+	 */
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
-    /**
-     * Sets the price of the items
-     *
-     * @param price Price of the items
-     */
-    public void setPrice(double price) {
-        this.price = price;
-    }
+	/**
+	 * @return Stock available
+	 */
+	public ItemStack[] getStock() {
+		return items;
+	}
 
-    /**
-     * Sets the stock
-     *
-     * @param stock Stock
-     */
-    public void setStock(ItemStack... stock) {
-        items = stock;
-    }
+	/**
+	 * Sets the stock
+	 *
+	 * @param stock Stock
+	 */
+	public void setStock(ItemStack... stock) {
+		items = stock;
+	}
 
-    /**
-     * @return Stock available
-     */
-    public ItemStack[] getStock() {
-        return items;
-    }
+	/**
+	 * @return Shop's client
+	 */
+	public Player getClient() {
+		return client;
+	}
 
-    /**
-     * @return Shop's client
-     */
-    public Player getClient() {
-        return client;
-    }
+	/**
+	 * @return Shop's owner
+	 */
+	public OfflinePlayer getOwner() {
+		return owner;
+	}
 
-    /**
-     * @return Shop's owner
-     */
-    public OfflinePlayer getOwner() {
-        return owner;
-    }
+	/**
+	 * Sets the shop's owner
+	 *
+	 * @param owner Shop owner
+	 */
+	public void setOwner(OfflinePlayer owner) {
+		this.owner = owner;
+	}
 
-    /**
-     * Sets the shop's owner
-     *
-     * @param owner Shop owner
-     */
-    public void setOwner(OfflinePlayer owner) {
-        this.owner = owner;
-    }
+	/**
+	 * @return Owner's inventory
+	 */
+	public Inventory getOwnerInventory() {
+		return ownerInventory;
+	}
 
-    /**
-     * @return Owner's inventory
-     */
-    public Inventory getOwnerInventory() {
-        return ownerInventory;
-    }
+	/**
+	 * Sets the owner's inventory
+	 *
+	 * @param ownerInventory Onwer's inventory
+	 */
+	public void setOwnerInventory(Inventory ownerInventory) {
+		this.ownerInventory = ownerInventory;
+	}
 
-    /**
-     * Sets the owner's inventory
-     *
-     * @param ownerInventory Onwer's inventory
-     */
-    public void setOwnerInventory(Inventory ownerInventory) {
-        this.ownerInventory = ownerInventory;
-    }
+	/**
+	 * @return Client's inventory
+	 */
+	public Inventory getClientInventory() {
+		return clientInventory;
+	}
 
-    /**
-     * Sets the client's inventory
-     *
-     * @param clientInventory Client's inventory
-     */
-    public void setClientInventory(Inventory clientInventory) {
-        this.clientInventory = clientInventory;
-    }
+	/**
+	 * Sets the client's inventory
+	 *
+	 * @param clientInventory Client's inventory
+	 */
+	public void setClientInventory(Inventory clientInventory) {
+		this.clientInventory = clientInventory;
+	}
 
-    /**
-     * @return Client's inventory
-     */
-    public Inventory getClientInventory() {
-        return clientInventory;
-    }
+	/**
+	 * @return Transaction's type
+	 */
+	public TransactionType getTransactionType() {
+		return transactionType;
+	}
 
-    /**
-     * @return Transaction's type
-     */
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
+	/**
+	 * @return Is the transaction cancelled?
+	 */
+	public boolean isCancelled() {
+		return transactionOutcome != TRANSACTION_SUCCESFUL;
+	}
 
-    /**
-     * @return Is the transaction cancelled?
-     */
-    public boolean isCancelled() {
-        return transactionOutcome != TRANSACTION_SUCCESFUL;
-    }
+	/**
+	 * Sets the outcome of the transaction
+	 *
+	 * @param reason Transction's outcome
+	 */
+	public void setCancelled(TransactionOutcome reason) {
+		transactionOutcome = reason;
+	}
 
-    /**
-     * @return Transaction's outcome
-     */
-    public TransactionOutcome getTransactionOutcome() {
-        return transactionOutcome;
-    }
+	/**
+	 * @return Transaction's outcome
+	 */
+	public TransactionOutcome getTransactionOutcome() {
+		return transactionOutcome;
+	}
 
-    /**
-     * Sets the outcome of the transaction
-     *
-     * @param reason Transction's outcome
-     */
-    public void setCancelled(TransactionOutcome reason) {
-        transactionOutcome = reason;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	public enum TransactionOutcome {
+		SHOP_DOES_NOT_BUY_THIS_ITEM,
+		SHOP_DOES_NOT_SELL_THIS_ITEM,
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+		CLIENT_DOES_NOT_HAVE_PERMISSION,
 
-    public enum TransactionOutcome {
-        SHOP_DOES_NOT_BUY_THIS_ITEM,
-        SHOP_DOES_NOT_SELL_THIS_ITEM,
+		CLIENT_DOES_NOT_HAVE_ENOUGH_MONEY,
+		SHOP_DOES_NOT_HAVE_ENOUGH_MONEY,
 
-        CLIENT_DOES_NOT_HAVE_PERMISSION,
+		CLIENT_DEPOSIT_FAILED,
+		SHOP_DEPOSIT_FAILED,
 
-        CLIENT_DOES_NOT_HAVE_ENOUGH_MONEY,
-        SHOP_DOES_NOT_HAVE_ENOUGH_MONEY,
+		NOT_ENOUGH_SPACE_IN_CHEST,
+		NOT_ENOUGH_SPACE_IN_INVENTORY,
 
-        CLIENT_DEPOSIT_FAILED,
-        SHOP_DEPOSIT_FAILED,
+		NOT_ENOUGH_STOCK_IN_CHEST,
+		NOT_ENOUGH_STOCK_IN_INVENTORY,
 
-        NOT_ENOUGH_SPACE_IN_CHEST,
-        NOT_ENOUGH_SPACE_IN_INVENTORY,
+		INVALID_SHOP,
 
-        NOT_ENOUGH_STOCK_IN_CHEST,
-        NOT_ENOUGH_STOCK_IN_INVENTORY,
+		SPAM_CLICKING_PROTECTION,
+		CREATIVE_MODE_PROTECTION,
+		SHOP_IS_RESTRICTED,
 
-        INVALID_SHOP,
+		OTHER, //For plugin use!
 
-        SPAM_CLICKING_PROTECTION,
-        CREATIVE_MODE_PROTECTION,
-        SHOP_IS_RESTRICTED,
-
-        OTHER, //For plugin use!
-
-        TRANSACTION_SUCCESFUL
-    }
+		TRANSACTION_SUCCESFUL
+	}
 }

@@ -6,54 +6,52 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import javax.annotation.Nullable;
-
 /**
  * Represents a state after shop destruction
  *
  * @author Acrobot
  */
 public class ShopDestroyedEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private final Player destroyer;
+	private final Player destroyer;
 
-    private final Sign sign;
-    private final Chest chest;
+	private final Sign sign;
+	private final Chest chest;
 
-    public ShopDestroyedEvent(@Nullable Player destroyer, Sign sign, @Nullable Chest chest) {
-        this.destroyer = destroyer;
-        this.sign = sign;
-        this.chest = chest;
-    }
+	public ShopDestroyedEvent(Player destroyer, Sign sign, Chest chest) {
+		this.destroyer = destroyer;
+		this.sign = sign;
+		this.chest = chest;
+	}
 
-    /**
-     * @return Shop's destroyer
-     */
-    @Nullable public Player getDestroyer() {
-        return destroyer;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * @return Shop's chest
-     */
-    @Nullable public Chest getChest() {
-        return chest;
-    }
+	/**
+	 * @return Shop's destroyer
+	 */
+	public Player getDestroyer() {
+		return destroyer;
+	}
 
-    /**
-     * @return Shop's sign
-     */
-    public Sign getSign() {
-        return sign;
-    }
+	/**
+	 * @return Shop's chest
+	 */
+	public Chest getChest() {
+		return chest;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	/**
+	 * @return Shop's sign
+	 */
+	public Sign getSign() {
+		return sign;
+	}
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

@@ -15,21 +15,21 @@ import static com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType.BUY;
  * @author Acrobot
  */
 public class PriceValidator implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
-    public static void onPriceCheck(PreTransactionEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+	@EventHandler(priority = EventPriority.LOWEST)
+	public static void onPriceCheck(PreTransactionEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
 
-        TransactionEvent.TransactionType transactionType = event.getTransactionType();
-        double price = event.getPrice();
+		TransactionEvent.TransactionType transactionType = event.getTransactionType();
+		double price = event.getPrice();
 
-        if (price == NO_PRICE) {
-            if (transactionType == BUY) {
-                event.setCancelled(SHOP_DOES_NOT_BUY_THIS_ITEM);
-            } else {
-                event.setCancelled(SHOP_DOES_NOT_SELL_THIS_ITEM);
-            }
-        }
-    }
+		if (price == NO_PRICE) {
+			if (transactionType == BUY) {
+				event.setCancelled(SHOP_DOES_NOT_BUY_THIS_ITEM);
+			} else {
+				event.setCancelled(SHOP_DOES_NOT_SELL_THIS_ITEM);
+			}
+		}
+	}
 }

@@ -14,24 +14,24 @@ import org.bukkit.event.Listener;
  * @author Acrobot
  */
 public class WorldGuardBuilding implements Listener {
-    private WorldGuardPlugin worldGuard;
+	private WorldGuardPlugin worldGuard;
 
-    public WorldGuardBuilding(WorldGuardPlugin plugin) {
-        this.worldGuard = plugin;
-    }
+	public WorldGuardBuilding(WorldGuardPlugin plugin) {
+		this.worldGuard = plugin;
+	}
 
-    @EventHandler
-    public void canBuild(BuildPermissionEvent event) {
-        ApplicableRegionSet regions = getApplicableRegions(event.getSign().getBlock().getLocation());
+	@EventHandler
+	public void canBuild(BuildPermissionEvent event) {
+		ApplicableRegionSet regions = getApplicableRegions(event.getSign().getBlock().getLocation());
 
-        if (Properties.WORLDGUARD_USE_FLAG) {
-            event.allow(regions.allows(DefaultFlag.ENABLE_SHOP));
-        } else {
-            event.allow(regions.size() != 0);
-        }
-    }
+		if (Properties.WORLDGUARD_USE_FLAG) {
+			event.allow(regions.allows(DefaultFlag.ENABLE_SHOP));
+		} else {
+			event.allow(regions.size() != 0);
+		}
+	}
 
-    private ApplicableRegionSet getApplicableRegions(Location location) {
-        return worldGuard.getGlobalRegionManager().get(location.getWorld()).getApplicableRegions(BukkitUtil.toVector(location));
-    }
+	private ApplicableRegionSet getApplicableRegions(Location location) {
+		return worldGuard.getGlobalRegionManager().get(location.getWorld()).getApplicableRegions(BukkitUtil.toVector(location));
+	}
 }

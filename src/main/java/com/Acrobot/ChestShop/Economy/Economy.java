@@ -18,39 +18,39 @@ import java.util.UUID;
  *         Economy management
  */
 public class Economy {
-    public static String getServerAccountName() {
-        return Properties.SERVER_ECONOMY_ACCOUNT;
-    }
+	public static String getServerAccountName() {
+		return Properties.SERVER_ECONOMY_ACCOUNT;
+	}
 
-    public static boolean isOwnerEconomicallyActive(Inventory inventory) {
-        return !ChestShopSign.isAdminShop(inventory) || !getServerAccountName().isEmpty();
-    }
+	public static boolean isOwnerEconomicallyActive(Inventory inventory) {
+		return !ChestShopSign.isAdminShop(inventory) || !getServerAccountName().isEmpty();
+	}
 
-    public static boolean add(UUID name, World world, double amount) {
-        CurrencyAddEvent event = new CurrencyAddEvent(BigDecimal.valueOf(amount), name, world);
-        ChestShop.callEvent(event);
+	public static boolean add(UUID name, World world, double amount) {
+		CurrencyAddEvent event = new CurrencyAddEvent(BigDecimal.valueOf(amount), name, world);
+		ChestShop.callEvent(event);
 
-        return true;
-    }
+		return true;
+	}
 
-    public static boolean subtract(UUID name, World world, double amount) {
-        CurrencySubtractEvent event = new CurrencySubtractEvent(BigDecimal.valueOf(amount), name, world);
-        ChestShop.callEvent(event);
+	public static boolean subtract(UUID name, World world, double amount) {
+		CurrencySubtractEvent event = new CurrencySubtractEvent(BigDecimal.valueOf(amount), name, world);
+		ChestShop.callEvent(event);
 
-        return true;
-    }
+		return true;
+	}
 
-    public static boolean hasEnough(UUID name, World world, double amount) {
-        CurrencyCheckEvent event = new CurrencyCheckEvent(BigDecimal.valueOf(amount), name, world);
-        ChestShop.callEvent(event);
+	public static boolean hasEnough(UUID name, World world, double amount) {
+		CurrencyCheckEvent event = new CurrencyCheckEvent(BigDecimal.valueOf(amount), name, world);
+		ChestShop.callEvent(event);
 
-        return event.hasEnough();
-    }
+		return event.hasEnough();
+	}
 
-    public static String formatBalance(double amount) {
-        CurrencyFormatEvent event = new CurrencyFormatEvent(BigDecimal.valueOf(amount));
-        ChestShop.callEvent(event);
+	public static String formatBalance(double amount) {
+		CurrencyFormatEvent event = new CurrencyFormatEvent(BigDecimal.valueOf(amount));
+		ChestShop.callEvent(event);
 
-        return event.getFormattedAmount();
-    }
+		return event.getFormattedAmount();
+	}
 }

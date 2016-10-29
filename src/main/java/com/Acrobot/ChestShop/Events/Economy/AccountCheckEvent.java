@@ -12,57 +12,57 @@ import java.util.UUID;
  * @author Acrobot
  */
 public class AccountCheckEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    boolean outcome;
+	boolean outcome;
 
-    private UUID account;
-    private World world;
+	private UUID account;
+	private World world;
 
-    public AccountCheckEvent(UUID account, World world) {
-        this.account = account;
-        this.world = world;
-    }
+	public AccountCheckEvent(UUID account, World world) {
+		this.account = account;
+		this.world = world;
+	}
 
-    public AccountCheckEvent(UUID account) {
-        this.account = account;
-    }
+	public AccountCheckEvent(UUID account) {
+		this.account = account;
+	}
 
-    /**
-     * @return Event's outcome (does the account exist?)
-     */
-    public boolean hasAccount() {
-        return outcome;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * Sets the event's outcome
-     *
-     * @param outcome Outcome of the check
-     */
-    public void hasAccount(boolean outcome) {
-        this.outcome = outcome;
-    }
+	/**
+	 * @return Event's outcome (does the account exist?)
+	 */
+	public boolean hasAccount() {
+		return outcome;
+	}
 
-    /**
-     * @return Account which is being checked
-     */
-    public UUID getAccount() {
-        return account;
-    }
+	/**
+	 * Sets the event's outcome
+	 *
+	 * @param outcome Outcome of the check
+	 */
+	public void hasAccount(boolean outcome) {
+		this.outcome = outcome;
+	}
 
-    /**
-     * @return The world in which the check occurs
-     */
-    public World getWorld() {
-        return world;
-    }
+	/**
+	 * @return Account which is being checked
+	 */
+	public UUID getAccount() {
+		return account;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	/**
+	 * @return The world in which the check occurs
+	 */
+	public World getWorld() {
+		return world;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

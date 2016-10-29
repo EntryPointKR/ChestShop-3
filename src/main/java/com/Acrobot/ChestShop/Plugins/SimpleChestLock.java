@@ -13,37 +13,37 @@ import org.bukkit.plugin.Plugin;
  * @author Acrobot
  */
 public class SimpleChestLock implements Listener {
-    private SCL scl;
+	private SCL scl;
 
-    public SimpleChestLock(SCL scl) {
-        this.scl = scl;
-    }
+	public SimpleChestLock(SCL scl) {
+		this.scl = scl;
+	}
 
-    @EventHandler
-    public void onProtectionCheck(ProtectionCheckEvent event) {
-        if (event.getResult() == Event.Result.DENY) {
-            return;
-        }
+	public static SimpleChestLock getSimpleChestLock(Plugin plugin) {
+		if (!(plugin instanceof SCL)) {
+			return null;
+		}
 
-        Block block = event.getBlock();
-        Player player = event.getPlayer();
+		return new SimpleChestLock((SCL) plugin);
+	}
 
-        if (!scl.chests.isLocked(block)) {
-            return;
-        }
+	@EventHandler
+	public void onProtectionCheck(ProtectionCheckEvent event) {
+		if (event.getResult() == Event.Result.DENY) {
+			return;
+		}
 
-        String playerName = player.getName();
+		Block block = event.getBlock();
+		Player player = event.getPlayer();
 
-        if (!scl.chests.getOwner(block).equals(playerName)) {
-            event.setResult(Event.Result.DENY);
-        }
-    }
+		if (!scl.chests.isLocked(block)) {
+			return;
+		}
 
-    public static SimpleChestLock getSimpleChestLock(Plugin plugin) {
-        if (!(plugin instanceof SCL)) {
-            return null;
-        }
+		String playerName = player.getName();
 
-        return new SimpleChestLock((SCL) plugin);
-    }
+		if (!scl.chests.getOwner(block).equals(playerName)) {
+			event.setResult(Event.Result.DENY);
+		}
+	}
 }

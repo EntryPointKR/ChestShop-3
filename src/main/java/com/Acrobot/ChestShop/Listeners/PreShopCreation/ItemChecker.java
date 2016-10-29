@@ -20,84 +20,84 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.ITEM_LINE;
  * @author Acrobot
  */
 public class ItemChecker implements Listener {
-    private static final short MAXIMUM_SIGN_LETTERS = 15;
-    private static final String AUTOFILL_CODE = "?";
+	private static final short MAXIMUM_SIGN_LETTERS = 15;
+	private static final String AUTOFILL_CODE = "?";
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        String itemCode = event.getSignLine(ITEM_LINE);
-        ItemStack item = MaterialUtil.getItem(itemCode);
+	@EventHandler(priority = EventPriority.LOWEST)
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		String itemCode = event.getSignLine(ITEM_LINE);
+		ItemStack item = MaterialUtil.getItem(itemCode);
 
-        if (Odd.getFromString(itemCode) != null) {
-            return; // The OddItem name is OK
-        }
+		if (Odd.getFromString(itemCode) != null) {
+			return; // The OddItem name is OK
+		}
 
-        if (item == null) {
-            boolean foundItem = false;
+		if (item == null) {
+			boolean foundItem = false;
 
-            if (Properties.ALLOW_AUTO_ITEM_FILL && itemCode.equals(AUTOFILL_CODE) && uBlock.findConnectedChest(event.getSign()) != null) {
-                for (ItemStack stack : uBlock.findConnectedChest(event.getSign()).getInventory().getContents()) {
-                    if (!MaterialUtil.isEmpty(stack)) {
-                        item = stack;
-                        itemCode = MaterialUtil.getSignName(stack);
+			if (Properties.ALLOW_AUTO_ITEM_FILL && itemCode.equals(AUTOFILL_CODE) && uBlock.findConnectedChest(event.getSign()) != null) {
+				for (ItemStack stack : uBlock.findConnectedChest(event.getSign()).getInventory().getContents()) {
+					if (!MaterialUtil.isEmpty(stack)) {
+						item = stack;
+						itemCode = MaterialUtil.getSignName(stack);
 
-                        event.setSignLine(ITEM_LINE, itemCode);
-                        foundItem = true;
+						event.setSignLine(ITEM_LINE, itemCode);
+						foundItem = true;
 
-                        break;
-                    }
-                }
-            }
+						break;
+					}
+				}
+			}
 
-            if (!foundItem) {
-                event.setOutcome(INVALID_ITEM);
-                return;
-            }
-        }
+			if (!foundItem) {
+				event.setOutcome(INVALID_ITEM);
+				return;
+			}
+		}
 
-        String metadata = getMetadata(itemCode);
-        String longName = MaterialUtil.getName(item);
+		String metadata = getMetadata(itemCode);
+		String longName = MaterialUtil.getName(item);
 
-        if (longName.length() <= (MAXIMUM_SIGN_LETTERS - metadata.length())) {
-            if (isSameItem(longName + metadata, item)) {
-                String itemName = StringUtil.capitalizeFirstLetter(longName);
+		if (longName.length() <= (MAXIMUM_SIGN_LETTERS - metadata.length())) {
+			if (isSameItem(longName + metadata, item)) {
+				String itemName = StringUtil.capitalizeFirstLetter(longName);
 
-                event.setSignLine(ITEM_LINE, itemName + metadata);
-                return;
-            }
-        }
+				event.setSignLine(ITEM_LINE, itemName + metadata);
+				return;
+			}
+		}
 
-        String code = MaterialUtil.getName(item, SHORT_NAME);
+		String code = MaterialUtil.getName(item, SHORT_NAME);
 
-        String[] parts = itemCode.split("(?=:|-|#)", 2);
-        String data = (parts.length > 1 ? parts[1] : "");
+		String[] parts = itemCode.split("(?=:|-|#)", 2);
+		String data = (parts.length > 1 ? parts[1] : "");
 
-        if (code.length() > (MAXIMUM_SIGN_LETTERS - data.length())) {
-            code = code.substring(0, MAXIMUM_SIGN_LETTERS - data.length());
-        }
+		if (code.length() > (MAXIMUM_SIGN_LETTERS - data.length())) {
+			code = code.substring(0, MAXIMUM_SIGN_LETTERS - data.length());
+		}
 
-        if (!isSameItem(code + data, item)) {
-            code = String.valueOf(item.getTypeId());
-        }
+		if (!isSameItem(code + data, item)) {
+			code = String.valueOf(item.getTypeId());
+		}
 
-        code = StringUtil.capitalizeFirstLetter(code);
+		code = StringUtil.capitalizeFirstLetter(code);
 
-        event.setSignLine(ITEM_LINE, code + data);
-    }
+		event.setSignLine(ITEM_LINE, code + data);
+	}
 
-    private static boolean isSameItem(String newCode, ItemStack item) {
-        ItemStack newItem = MaterialUtil.getItem(newCode);
+	private static boolean isSameItem(String newCode, ItemStack item) {
+		ItemStack newItem = MaterialUtil.getItem(newCode);
 
-        return newItem != null && MaterialUtil.equals(newItem, item);
-    }
+		return newItem != null && MaterialUtil.equals(newItem, item);
+	}
 
-    private static String getMetadata(String itemCode) {
-        Matcher m = METADATA.matcher(itemCode);
+	private static String getMetadata(String itemCode) {
+		Matcher m = METADATA.matcher(itemCode);
 
-        if (!m.find()) {
-            return "";
-        }
+		if (!m.find()) {
+			return "";
+		}
 
-        return m.group();
-    }
+		return m.group();
+	}
 }

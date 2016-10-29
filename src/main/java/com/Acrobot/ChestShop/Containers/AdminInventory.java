@@ -1,5 +1,6 @@
 package com.Acrobot.ChestShop.Containers;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryType;
@@ -16,158 +17,173 @@ import java.util.ListIterator;
  * @author Acrobot
  */
 public class AdminInventory implements Inventory {
-    public int getSize() {
-        return Integer.MAX_VALUE;
-    }
+	@Override
+	public ItemStack[] getStorageContents() {
+		return new ItemStack[0];
+	}
 
-    public int getMaxStackSize() {
-        return Integer.MAX_VALUE;
-    }
+	@Override
+	public void setStorageContents(ItemStack[] itemStacks) throws IllegalArgumentException {
 
-    public void setMaxStackSize(int i) {
-    }
+	}
 
-    public String getName() {
-        return "Admin inventory";
-    }
+	@Override
+	public Location getLocation() {
+		return null;
+	}
 
-    public ItemStack getItem(int i) {
-        return null;
-    }
+	public int getSize() {
+		return Integer.MAX_VALUE;
+	}
 
-    public void setItem(int i, ItemStack itemStack) {
-    }
+	public int getMaxStackSize() {
+		return Integer.MAX_VALUE;
+	}
 
-    public HashMap<Integer, ItemStack> addItem(ItemStack... itemStacks) {
-        return new HashMap<Integer, ItemStack>();
-    }
+	public void setMaxStackSize(int i) {
+	}
 
-    public HashMap<Integer, ItemStack> removeItem(ItemStack... itemStacks) {
-        return new HashMap<Integer, ItemStack>();
-    }
+	public String getName() {
+		return "Admin inventory";
+	}
 
-    public ItemStack[] getContents() {
-        return new ItemStack[]{
-                new ItemStack(Material.CHEST, 1),
-                new ItemStack(Material.AIR, Integer.MAX_VALUE)
-        };
-    }
+	public ItemStack getItem(int i) {
+		return null;
+	}
 
-    public void setContents(ItemStack[] itemStacks) {
-    }
+	public void setItem(int i, ItemStack itemStack) {
+	}
 
-    public boolean contains(int i) {
-        return true;
-    }
+	public HashMap<Integer, ItemStack> addItem(ItemStack... itemStacks) {
+		return new HashMap<Integer, ItemStack>();
+	}
 
-    public boolean contains(Material material) {
-        return true;
-    }
+	public HashMap<Integer, ItemStack> removeItem(ItemStack... itemStacks) {
+		return new HashMap<Integer, ItemStack>();
+	}
 
-    public boolean contains(ItemStack itemStack) {
-        return true;
-    }
+	public ItemStack[] getContents() {
+		return new ItemStack[]{
+				new ItemStack(Material.CHEST, 1),
+				new ItemStack(Material.AIR, Integer.MAX_VALUE)
+		};
+	}
 
-    public boolean contains(int i, int i1) {
-        return true;
-    }
+	public void setContents(ItemStack[] itemStacks) {
+	}
 
-    public boolean contains(Material material, int i) {
-        return true;
-    }
+	public boolean contains(int i) {
+		return true;
+	}
 
-    public boolean contains(ItemStack itemStack, int i) {
-        return true;
-    }
+	public boolean contains(Material material) {
+		return true;
+	}
 
-    public boolean containsAtLeast(ItemStack itemStack, int i) {
-        return true;
-    }
+	public boolean contains(ItemStack itemStack) {
+		return true;
+	}
 
-    public HashMap<Integer, ? extends ItemStack> all(int i) {
-        HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
-        items.put(1, new ItemStack(i, Integer.MAX_VALUE));
+	public boolean contains(int i, int i1) {
+		return true;
+	}
 
-        return items;
-    }
+	public boolean contains(Material material, int i) {
+		return true;
+	}
 
-    public HashMap<Integer, ? extends ItemStack> all(Material material) {
-        if (material.getMaxDurability() != 0) {
-            HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+	public boolean contains(ItemStack itemStack, int i) {
+		return true;
+	}
 
-            for (short currentDurability = 0; currentDurability < material.getMaxDurability(); currentDurability++) {
-                items.put((int) currentDurability, new ItemStack(material, Integer.MAX_VALUE, currentDurability));
-            }
+	public boolean containsAtLeast(ItemStack itemStack, int i) {
+		return true;
+	}
 
-            return items;
-        }
+	public HashMap<Integer, ? extends ItemStack> all(int i) {
+		HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+		items.put(1, new ItemStack(i, Integer.MAX_VALUE));
 
-        return all(material.getId());
-    }
+		return items;
+	}
 
-    public HashMap<Integer, ? extends ItemStack> all(ItemStack itemStack) {
-        HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+	public HashMap<Integer, ? extends ItemStack> all(Material material) {
+		if (material.getMaxDurability() != 0) {
+			HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
 
-        ItemStack clone = itemStack.clone();
-        clone.setAmount(Integer.MAX_VALUE);
+			for (short currentDurability = 0; currentDurability < material.getMaxDurability(); currentDurability++) {
+				items.put((int) currentDurability, new ItemStack(material, Integer.MAX_VALUE, currentDurability));
+			}
 
-        items.put(1, clone);
+			return items;
+		}
 
-        return items;
-    }
+		return all(material.getId());
+	}
 
-    public int first(int i) {
-        return 0;
-    }
+	public HashMap<Integer, ? extends ItemStack> all(ItemStack itemStack) {
+		HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
 
-    public int first(Material material) {
-        return 0;
-    }
+		ItemStack clone = itemStack.clone();
+		clone.setAmount(Integer.MAX_VALUE);
 
-    public int first(ItemStack itemStack) {
-        return 0;
-    }
+		items.put(1, clone);
 
-    public int firstEmpty() {
-        return 0;
-    }
+		return items;
+	}
 
-    public void remove(int i) {
-    }
+	public int first(int i) {
+		return 0;
+	}
 
-    public void remove(Material material) {
-    }
+	public int first(Material material) {
+		return 0;
+	}
 
-    public void remove(ItemStack itemStack) {
-    }
+	public int first(ItemStack itemStack) {
+		return 0;
+	}
 
-    public void clear(int i) {
-    }
+	public int firstEmpty() {
+		return 0;
+	}
 
-    public void clear() {
-    }
+	public void remove(int i) {
+	}
 
-    public List<HumanEntity> getViewers() {
-        return new ArrayList<HumanEntity>();
-    }
+	public void remove(Material material) {
+	}
 
-    public String getTitle() {
-        return "Admin inventory";
-    }
+	public void remove(ItemStack itemStack) {
+	}
 
-    public InventoryType getType() {
-        return null;
-    }
+	public void clear(int i) {
+	}
 
-    public InventoryHolder getHolder() {
-        return null;
-    }
+	public void clear() {
+	}
 
-    public ListIterator<ItemStack> iterator() {
-        return null;
-    }
+	public List<HumanEntity> getViewers() {
+		return new ArrayList<HumanEntity>();
+	}
 
-    public ListIterator<ItemStack> iterator(int i) {
-        return null;
-    }
+	public String getTitle() {
+		return "Admin inventory";
+	}
+
+	public InventoryType getType() {
+		return null;
+	}
+
+	public InventoryHolder getHolder() {
+		return null;
+	}
+
+	public ListIterator<ItemStack> iterator() {
+		return null;
+	}
+
+	public ListIterator<ItemStack> iterator(int i) {
+		return null;
+	}
 }

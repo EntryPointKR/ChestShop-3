@@ -22,34 +22,34 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  */
 public class TerrainChecker implements Listener {
 
-    @EventHandler
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        String nameLine = event.getSignLine(NAME_LINE);
+	@EventHandler
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		String nameLine = event.getSignLine(NAME_LINE);
 
-        if (ChestShopSign.isAdminShop(nameLine)) {
-            return;
-        }
+		if (ChestShopSign.isAdminShop(nameLine)) {
+			return;
+		}
 
-        Player player = event.getPlayer();
+		Player player = event.getPlayer();
 
-        if (Permission.has(player, ADMIN)) {
-            return;
-        }
+		if (Permission.has(player, ADMIN)) {
+			return;
+		}
 
-        if (!Security.canPlaceSign(player, event.getSign())) {
-            event.setOutcome(NO_PERMISSION_FOR_TERRAIN);
-            return;
-        }
+		if (!Security.canPlaceSign(player, event.getSign())) {
+			event.setOutcome(NO_PERMISSION_FOR_TERRAIN);
+			return;
+		}
 
-        Chest connectedChest = uBlock.findConnectedChest(event.getSign().getBlock());
-        Location chestLocation = (connectedChest != null ? connectedChest.getLocation() : null);
+		Chest connectedChest = uBlock.findConnectedChest(event.getSign().getBlock());
+		Location chestLocation = (connectedChest != null ? connectedChest.getLocation() : null);
 
-        BuildPermissionEvent bEvent = new BuildPermissionEvent(player, chestLocation, event.getSign().getLocation());
-        ChestShop.callEvent(bEvent);
+		BuildPermissionEvent bEvent = new BuildPermissionEvent(player, chestLocation, event.getSign().getLocation());
+		ChestShop.callEvent(bEvent);
 
-        if (!bEvent.isAllowed()) {
-            event.setOutcome(NO_PERMISSION_FOR_TERRAIN);
-        }
+		if (!bEvent.isAllowed()) {
+			event.setOutcome(NO_PERMISSION_FOR_TERRAIN);
+		}
 
-    }
+	}
 }

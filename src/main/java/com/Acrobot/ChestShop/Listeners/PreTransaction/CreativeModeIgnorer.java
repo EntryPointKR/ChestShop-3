@@ -14,14 +14,14 @@ import static com.Acrobot.ChestShop.Events.PreTransactionEvent.TransactionOutcom
  */
 public class CreativeModeIgnorer implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public static void onPreTransaction(PreTransactionEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+	@EventHandler(priority = EventPriority.LOWEST)
+	public static void onPreTransaction(PreTransactionEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
 
-        if (Properties.IGNORE_CREATIVE_MODE && event.getClient().getGameMode() == GameMode.CREATIVE) {
-            event.setCancelled(CREATIVE_MODE_PROTECTION);
-        }
-    }
+		if (Properties.IGNORE_CREATIVE_MODE && event.getClient().getGameMode() == GameMode.CREATIVE) {
+			event.setCancelled(CREATIVE_MODE_PROTECTION);
+		}
+	}
 }

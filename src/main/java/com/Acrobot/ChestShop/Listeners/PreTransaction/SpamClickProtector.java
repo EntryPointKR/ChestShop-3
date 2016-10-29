@@ -16,21 +16,21 @@ import static com.Acrobot.ChestShop.Events.PreTransactionEvent.TransactionOutcom
  * @author Acrobot
  */
 public class SpamClickProtector implements Listener {
-    private final Map<Player, Long> TIME_OF_LATEST_CLICK = new WeakHashMap<Player, Long>();
+	private final Map<Player, Long> TIME_OF_LATEST_CLICK = new WeakHashMap<Player, Long>();
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onClick(PreTransactionEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onClick(PreTransactionEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
 
-        Player clicker = event.getClient();
+		Player clicker = event.getClient();
 
-        if (TIME_OF_LATEST_CLICK.containsKey(clicker) && (System.currentTimeMillis() - TIME_OF_LATEST_CLICK.get(clicker)) < Properties.SHOP_INTERACTION_INTERVAL) {
-            event.setCancelled(SPAM_CLICKING_PROTECTION);
-            return;
-        }
+		if (TIME_OF_LATEST_CLICK.containsKey(clicker) && (System.currentTimeMillis() - TIME_OF_LATEST_CLICK.get(clicker)) < Properties.SHOP_INTERACTION_INTERVAL) {
+			event.setCancelled(SPAM_CLICKING_PROTECTION);
+			return;
+		}
 
-        TIME_OF_LATEST_CLICK.put(clicker, System.currentTimeMillis());
-    }
+		TIME_OF_LATEST_CLICK.put(clicker, System.currentTimeMillis());
+	}
 }

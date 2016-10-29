@@ -44,160 +44,160 @@ import static org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK;
  */
 public class PlayerInteract implements Listener {
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public static void onInteract(PlayerInteractEvent event) {
-        Block block = event.getClickedBlock();
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public static void onInteract(PlayerInteractEvent event) {
+		Block block = event.getClickedBlock();
 
-        if (block == null) {
-            return;
-        }
+		if (block == null) {
+			return;
+		}
 
-        Action action = event.getAction();
-        Player player = event.getPlayer();
+		Action action = event.getAction();
+		Player player = event.getPlayer();
 
-        if (Properties.USE_BUILT_IN_PROTECTION && isChest(block)) {
-            if (Properties.TURN_OFF_DEFAULT_PROTECTION_WHEN_PROTECTED_EXTERNALLY) {
-                return;
-            }
+		if (Properties.USE_BUILT_IN_PROTECTION && isChest(block)) {
+			if (Properties.TURN_OFF_DEFAULT_PROTECTION_WHEN_PROTECTED_EXTERNALLY) {
+				return;
+			}
 
-            if (!canOpenOtherShops(player) && !ChestShop.canAccess(player, block)) {
-                player.sendMessage(Messages.prefix(Messages.ACCESS_DENIED));
-                event.setCancelled(true);
-            }
+			if (!canOpenOtherShops(player) && !ChestShop.canAccess(player, block)) {
+				player.sendMessage(Messages.prefix(Messages.ACCESS_DENIED));
+				event.setCancelled(true);
+			}
 
-            return;
-        }
+			return;
+		}
 
-        if (!isSign(block) || player.getItemInHand().getType() == Material.SIGN) { // Blocking accidental sign edition
-            return;
-        }
+		if (!isSign(block) || player.getItemInHand().getType() == Material.SIGN) { // Blocking accidental sign edition
+			return;
+		}
 
-        Sign sign = (Sign) block.getState();
+		Sign sign = (Sign) block.getState();
 
-        if (!ChestShopSign.isValid(sign)) {
-            return;
-        }
+		if (!ChestShopSign.isValid(sign)) {
+			return;
+		}
 
-        if (ChestShopSign.canAccess(player, sign)) {
-            if (!Properties.ALLOW_SIGN_CHEST_OPEN || player.isSneaking() || player.isInsideVehicle() || player.getGameMode() == GameMode.CREATIVE) {
-                return;
-            }
+		if (ChestShopSign.canAccess(player, sign)) {
+			if (!Properties.ALLOW_SIGN_CHEST_OPEN || player.isSneaking() || player.isInsideVehicle() || player.getGameMode() == GameMode.CREATIVE) {
+				return;
+			}
 
-            if (!Properties.ALLOW_LEFT_CLICK_DESTROYING || action != LEFT_CLICK_BLOCK) {
-                event.setCancelled(true);
-                showChestGUI(player, block);
-            }
+			if (!Properties.ALLOW_LEFT_CLICK_DESTROYING || action != LEFT_CLICK_BLOCK) {
+				event.setCancelled(true);
+				showChestGUI(player, block);
+			}
 
-            return;
-        }
+			return;
+		}
 
-        if (action == RIGHT_CLICK_BLOCK) {
-            event.setCancelled(true);
-        }
+		if (action == RIGHT_CLICK_BLOCK) {
+			event.setCancelled(true);
+		}
 
-        PreTransactionEvent pEvent = preparePreTransactionEvent(sign, player, action);
+		PreTransactionEvent pEvent = preparePreTransactionEvent(sign, player, action);
 
-        if (pEvent == null) {
-            return;
-        }
+		if (pEvent == null) {
+			return;
+		}
 
-        Bukkit.getPluginManager().callEvent(pEvent);
+		Bukkit.getPluginManager().callEvent(pEvent);
 
-        if (pEvent.isCancelled()) {
-            return;
-        }
+		if (pEvent.isCancelled()) {
+			return;
+		}
 
-        TransactionEvent tEvent = new TransactionEvent(pEvent, sign);
-        Bukkit.getPluginManager().callEvent(tEvent);
-    }
+		TransactionEvent tEvent = new TransactionEvent(pEvent, sign);
+		Bukkit.getPluginManager().callEvent(tEvent);
+	}
 
-    private static PreTransactionEvent preparePreTransactionEvent(Sign sign, Player player, Action action) {
-        String name = sign.getLine(NAME_LINE);
-        String quantity = sign.getLine(QUANTITY_LINE);
-        String prices = sign.getLine(PRICE_LINE);
-        String material = sign.getLine(ITEM_LINE);
+	private static PreTransactionEvent preparePreTransactionEvent(Sign sign, Player player, Action action) {
+		String name = sign.getLine(NAME_LINE);
+		String quantity = sign.getLine(QUANTITY_LINE);
+		String prices = sign.getLine(PRICE_LINE);
+		String material = sign.getLine(ITEM_LINE);
 
-        String ownerName = NameManager.getFullUsername(name);
-        UUID uuid = NameManager.getUUID(ownerName);
+		String ownerName = NameManager.getFullUsername(name);
+		UUID uuid = NameManager.getUUID(ownerName);
 
-        if (uuid == null) {
-            return null;
-        }
+		if (uuid == null) {
+			return null;
+		}
 
-        OfflinePlayer owner = Bukkit.getOfflinePlayer(uuid);
+		OfflinePlayer owner = Bukkit.getOfflinePlayer(uuid);
 
-        Action buy = Properties.REVERSE_BUTTONS ? LEFT_CLICK_BLOCK : RIGHT_CLICK_BLOCK;
-        double price = (action == buy ? PriceUtil.getBuyPrice(prices) : PriceUtil.getSellPrice(prices));
+		Action buy = Properties.REVERSE_BUTTONS ? LEFT_CLICK_BLOCK : RIGHT_CLICK_BLOCK;
+		double price = (action == buy ? PriceUtil.getBuyPrice(prices) : PriceUtil.getSellPrice(prices));
 
-        Chest chest = uBlock.findConnectedChest(sign);
-        Inventory ownerInventory = (ChestShopSign.isAdminShop(sign) ? new AdminInventory() : chest != null ? chest.getInventory() : null);
+		Chest chest = uBlock.findConnectedChest(sign);
+		Inventory ownerInventory = (ChestShopSign.isAdminShop(sign) ? new AdminInventory() : chest != null ? chest.getInventory() : null);
 
-        ItemStack item = MaterialUtil.getItem(material);
+		ItemStack item = MaterialUtil.getItem(material);
 
-        if (item == null || !NumberUtil.isInteger(quantity)) {
-            player.sendMessage(Messages.prefix(Messages.INVALID_SHOP_DETECTED));
-            return null;
-        }
+		if (item == null || !NumberUtil.isInteger(quantity)) {
+			player.sendMessage(Messages.prefix(Messages.INVALID_SHOP_DETECTED));
+			return null;
+		}
 
-        int amount = Integer.parseInt(quantity);
+		int amount = Integer.parseInt(quantity);
 
-        if (amount < 1) {
-            amount = 1;
-        }
+		if (amount < 1) {
+			amount = 1;
+		}
 
-        if (Properties.SHIFT_SELLS_IN_STACKS && player.isSneaking() && price != PriceUtil.NO_PRICE && isAllowedForShift(action == buy)) {
-            int newAmount = getStackAmount(item, ownerInventory, player, action);
-            if (newAmount > 0) {
-                price = (price / amount) * newAmount;
-                amount = newAmount;
-            }
-        }
+		if (Properties.SHIFT_SELLS_IN_STACKS && player.isSneaking() && price != PriceUtil.NO_PRICE && isAllowedForShift(action == buy)) {
+			int newAmount = getStackAmount(item, ownerInventory, player, action);
+			if (newAmount > 0) {
+				price = (price / amount) * newAmount;
+				amount = newAmount;
+			}
+		}
 
-        item.setAmount(amount);
+		item.setAmount(amount);
 
-        ItemStack[] items = {item};
+		ItemStack[] items = {item};
 
-        TransactionType transactionType = (action == buy ? BUY : SELL);
-        return new PreTransactionEvent(ownerInventory, player.getInventory(), items, price, player, owner, sign, transactionType);
-    }
+		TransactionType transactionType = (action == buy ? BUY : SELL);
+		return new PreTransactionEvent(ownerInventory, player.getInventory(), items, price, player, owner, sign, transactionType);
+	}
 
-    private static boolean isAllowedForShift(boolean buyTransaction) {
-        String allowed = Properties.SHIFT_ALLOWS;
+	private static boolean isAllowedForShift(boolean buyTransaction) {
+		String allowed = Properties.SHIFT_ALLOWS;
 
-        if (allowed.equalsIgnoreCase("ALL")) {
-            return true;
-        }
+		if (allowed.equalsIgnoreCase("ALL")) {
+			return true;
+		}
 
-        return allowed.equalsIgnoreCase(buyTransaction ? "BUY" : "SELL");
-    }
+		return allowed.equalsIgnoreCase(buyTransaction ? "BUY" : "SELL");
+	}
 
-    private static int getStackAmount(ItemStack item, Inventory inventory, Player player, Action action) {
-        Action buy = Properties.REVERSE_BUTTONS ? LEFT_CLICK_BLOCK : RIGHT_CLICK_BLOCK;
-        Inventory checkedInventory = (action == buy ? inventory : player.getInventory());
+	private static int getStackAmount(ItemStack item, Inventory inventory, Player player, Action action) {
+		Action buy = Properties.REVERSE_BUTTONS ? LEFT_CLICK_BLOCK : RIGHT_CLICK_BLOCK;
+		Inventory checkedInventory = (action == buy ? inventory : player.getInventory());
 
-        if (checkedInventory.containsAtLeast(item, item.getMaxStackSize())) {
-            return item.getMaxStackSize();
-        } else {
-            return InventoryUtil.getAmount(item, checkedInventory);
-        }
-    }
+		if (checkedInventory.containsAtLeast(item, item.getMaxStackSize())) {
+			return item.getMaxStackSize();
+		} else {
+			return InventoryUtil.getAmount(item, checkedInventory);
+		}
+	}
 
-    public static boolean canOpenOtherShops(Player player) {
-        return Permission.has(player, Permission.ADMIN) || Permission.has(player, Permission.MOD);
-    }
+	public static boolean canOpenOtherShops(Player player) {
+		return Permission.has(player, Permission.ADMIN) || Permission.has(player, Permission.MOD);
+	}
 
-    private static void showChestGUI(Player player, Block signBlock) {
-        Chest chest = uBlock.findConnectedChest(signBlock);
+	private static void showChestGUI(Player player, Block signBlock) {
+		Chest chest = uBlock.findConnectedChest(signBlock);
 
-        if (chest == null) {
-            player.sendMessage(Messages.prefix(Messages.NO_CHEST_DETECTED));
-            return;
-        }
+		if (chest == null) {
+			player.sendMessage(Messages.prefix(Messages.NO_CHEST_DETECTED));
+			return;
+		}
 
-        if (!canOpenOtherShops(player) && !Security.canAccess(player, signBlock)) {
-            return;
-        }
+		if (!canOpenOtherShops(player) && !Security.canAccess(player, signBlock)) {
+			return;
+		}
 
-        BlockUtil.openBlockGUI(chest, player);
-    }
+		BlockUtil.openBlockGUI(chest, player);
+	}
 }

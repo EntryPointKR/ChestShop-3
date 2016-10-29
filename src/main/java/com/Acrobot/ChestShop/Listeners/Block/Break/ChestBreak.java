@@ -16,32 +16,32 @@ import org.bukkit.event.entity.EntityExplodeEvent;
  * @author Acrobot
  */
 public class ChestBreak implements Listener {
-    @EventHandler(ignoreCancelled = true)
-    public static void onChestBreak(BlockBreakEvent event) {
-        if (!canChestBeBroken(event.getBlock(), event.getPlayer())) {
-            event.setCancelled(true);
-        }
-    }
+	@EventHandler(ignoreCancelled = true)
+	public static void onChestBreak(BlockBreakEvent event) {
+		if (!canChestBeBroken(event.getBlock(), event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
 
-    @EventHandler(ignoreCancelled = true)
-    public static void onExplosion(EntityExplodeEvent event) {
-        if (event.blockList() == null || !Properties.USE_BUILT_IN_PROTECTION) {
-            return;
-        }
+	@EventHandler(ignoreCancelled = true)
+	public static void onExplosion(EntityExplodeEvent event) {
+		if (event.blockList() == null || !Properties.USE_BUILT_IN_PROTECTION) {
+			return;
+		}
 
-        for (Block block : event.blockList()) {
-            if (!canChestBeBroken(block, null)) {
-                event.setCancelled(true);
-                return;
-            }
-        }
-    }
+		for (Block block : event.blockList()) {
+			if (!canChestBeBroken(block, null)) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
 
-    private static boolean canChestBeBroken(Block chest, Player breaker) {
-        if (!BlockUtil.isChest(chest) || !Properties.USE_BUILT_IN_PROTECTION || !ChestShopSign.isShopChest(chest)) {
-            return true;
-        }
+	private static boolean canChestBeBroken(Block chest, Player breaker) {
+		if (!BlockUtil.isChest(chest) || !Properties.USE_BUILT_IN_PROTECTION || !ChestShopSign.isShopChest(chest)) {
+			return true;
+		}
 
-        return breaker != null && (PlayerInteract.canOpenOtherShops(breaker) || ChestShop.canAccess(breaker, chest));
-    }
+		return breaker != null && (PlayerInteract.canOpenOtherShops(breaker) || ChestShop.canAccess(breaker, chest));
+	}
 }

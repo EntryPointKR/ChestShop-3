@@ -24,224 +24,224 @@ import java.util.UUID;
  */
 @SuppressWarnings("UnusedAssignment") //I deliberately set the variables to null while initializing
 public class NameManager {
-    private static Dao<Account, String> accounts;
+	private static Dao<Account, String> accounts;
 
-    private static Map<UUID, String> lastSeenName = new HashMap<UUID, String>();
-    private static BiMap<String, UUID> usernameToUUID = HashBiMap.create();
-    private static Map<String, String> shortToLongName = new HashMap<String, String>();
+	private static Map<UUID, String> lastSeenName = new HashMap<UUID, String>();
+	private static BiMap<String, UUID> usernameToUUID = HashBiMap.create();
+	private static Map<String, String> shortToLongName = new HashMap<String, String>();
 
-    public static String getLastSeenName(UUID uuid) {
-        if (lastSeenName.containsKey(uuid)) {
-            return lastSeenName.get(uuid);
-        }
+	public static String getLastSeenName(UUID uuid) {
+		if (lastSeenName.containsKey(uuid)) {
+			return lastSeenName.get(uuid);
+		}
 
-        if (Bukkit.getOfflinePlayer(uuid).getName() != null) {
-            String lastSeen = Bukkit.getOfflinePlayer(uuid).getName();
+		if (Bukkit.getOfflinePlayer(uuid).getName() != null) {
+			String lastSeen = Bukkit.getOfflinePlayer(uuid).getName();
 
-            lastSeenName.put(uuid, lastSeen);
-            return lastSeen;
-        }
+			lastSeenName.put(uuid, lastSeen);
+			return lastSeen;
+		}
 
-        Account account = null;
+		Account account = null;
 
-        try {
-            account = accounts.queryBuilder().selectColumns("lastSeenName", "name").where().eq("uuid", uuid).queryForFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+		try {
+			account = accounts.queryBuilder().selectColumns("lastSeenName", "name").where().eq("uuid", uuid).queryForFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-        if (account == null) {
-            return "";
-        }
+		if (account == null) {
+			return "";
+		}
 
-        if (account.getLastSeenName() != null) {
-            lastSeenName.put(uuid, account.getLastSeenName());
-        } else if (account.getName() != null) {
-            lastSeenName.put(uuid, account.getName());
-        }
+		if (account.getLastSeenName() != null) {
+			lastSeenName.put(uuid, account.getLastSeenName());
+		} else if (account.getName() != null) {
+			lastSeenName.put(uuid, account.getName());
+		}
 
-        return account.getLastSeenName();
-    }
+		return account.getLastSeenName();
+	}
 
-    public static UUID getUUID(String username) {
-        if (usernameToUUID.containsKey(username)) {
-            return usernameToUUID.get(username);
-        }
+	public static UUID getUUID(String username) {
+		if (usernameToUUID.containsKey(username)) {
+			return usernameToUUID.get(username);
+		}
 
-        String shortenedName = NameUtil.stripUsername(username);
+		String shortenedName = NameUtil.stripUsername(username);
 
-        Account account = null;
+		Account account = null;
 
-        try {
-            account = accounts.queryBuilder().selectColumns("uuid").where().eq("shortName", shortenedName).queryForFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+		try {
+			account = accounts.queryBuilder().selectColumns("uuid").where().eq("shortName", shortenedName).queryForFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-        if (account == null) {
-            return Bukkit.getOfflinePlayer(username).getUniqueId();
-        }
+		if (account == null) {
+			return Bukkit.getOfflinePlayer(username).getUniqueId();
+		}
 
-        UUID uuid = account.getUuid();
+		UUID uuid = account.getUuid();
 
-        if (uuid != null && !usernameToUUID.containsValue(uuid)) {
-            usernameToUUID.put(account.getName(), uuid);
-        }
+		if (uuid != null && !usernameToUUID.containsValue(uuid)) {
+			usernameToUUID.put(account.getName(), uuid);
+		}
 
-        return uuid;
-    }
+		return uuid;
+	}
 
-    public static String getUsername(UUID uuid) {
-        if (usernameToUUID.containsValue(uuid)) {
-            return usernameToUUID.inverse().get(uuid);
-        }
+	public static String getUsername(UUID uuid) {
+		if (usernameToUUID.containsValue(uuid)) {
+			return usernameToUUID.inverse().get(uuid);
+		}
 
-        Account account = null;
+		Account account = null;
 
-        try {
-            account = accounts.queryBuilder().selectColumns("name").where().eq("uuid", uuid).queryForFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+		try {
+			account = accounts.queryBuilder().selectColumns("name").where().eq("uuid", uuid).queryForFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-        if (account == null) {
-            String name = Bukkit.getOfflinePlayer(uuid).getName();
+		if (account == null) {
+			String name = Bukkit.getOfflinePlayer(uuid).getName();
 
-            if (name != null) {
-                usernameToUUID.put(name, uuid);
-                return name;
-            }
+			if (name != null) {
+				usernameToUUID.put(name, uuid);
+				return name;
+			}
 
-            return "";
-        }
+			return "";
+		}
 
-        String name = account.getName();
+		String name = account.getName();
 
-        if (name != null) {
-            usernameToUUID.put(name, uuid);
-        }
+		if (name != null) {
+			usernameToUUID.put(name, uuid);
+		}
 
-        return name;
-    }
+		return name;
+	}
 
-    public static String getFullUsername(String username) {
-        if (ChestShopSign.isAdminShop(username)) {
-            return Properties.ADMIN_SHOP_NAME;
-        }
+	public static String getFullUsername(String username) {
+		if (ChestShopSign.isAdminShop(username)) {
+			return Properties.ADMIN_SHOP_NAME;
+		}
 
-        String shortName = NameUtil.stripUsername(username);
+		String shortName = NameUtil.stripUsername(username);
 
-        if (shortToLongName.containsKey(shortName)) {
-            return shortToLongName.get(shortName);
-        }
+		if (shortToLongName.containsKey(shortName)) {
+			return shortToLongName.get(shortName);
+		}
 
-        Account account = null;
+		Account account = null;
 
-        try {
-            account = accounts.queryBuilder().selectColumns("name").where().eq("shortName", shortName).queryForFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+		try {
+			account = accounts.queryBuilder().selectColumns("name").where().eq("shortName", shortName).queryForFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-        if (account == null) {
-            return username;
-        }
+		if (account == null) {
+			return username;
+		}
 
-        String name = account.getName();
+		String name = account.getName();
 
-        if (name != null) {
-            shortToLongName.put(shortName, name);
-        }
+		if (name != null) {
+			shortToLongName.put(shortName, name);
+		}
 
-        return name;
-    }
+		return name;
+	}
 
-    public static void storeUsername(final PlayerDTO player) {
-        final UUID uuid = player.getUniqueId();
+	public static void storeUsername(final PlayerDTO player) {
+		final UUID uuid = player.getUniqueId();
 
-        Account account = null;
+		Account account = null;
 
-        try {
-            account = accounts.queryBuilder().where().eq("uuid", uuid).queryForFirst();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
+		try {
+			account = accounts.queryBuilder().where().eq("uuid", uuid).queryForFirst();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
 
-        if (account != null) {
-            if (account.getName() != null && account.getShortName() == null) {
-                String shortenedName = NameUtil.stripUsername(account.getName());
+		if (account != null) {
+			if (account.getName() != null && account.getShortName() == null) {
+				String shortenedName = NameUtil.stripUsername(account.getName());
 
-                account.setShortName(shortenedName);
-            }
+				account.setShortName(shortenedName);
+			}
 
-            account.setUuid(uuid); //HOW IS IT EVEN POSSIBLE THAT UUID IS NOT SET EVEN IF WE HAVE FOUND THE PLAYER?!
-            account.setLastSeenName(player.getName());
+			account.setUuid(uuid); //HOW IS IT EVEN POSSIBLE THAT UUID IS NOT SET EVEN IF WE HAVE FOUND THE PLAYER?!
+			account.setLastSeenName(player.getName());
 
-            try {
-                accounts.createOrUpdate(account);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+			try {
+				accounts.createOrUpdate(account);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 
-            return;
-        }
+			return;
+		}
 
-        account = new Account(player.getName(), player.getUniqueId());
+		account = new Account(player.getName(), player.getUniqueId());
 
-        if (!usernameToUUID.inverse().containsKey(uuid)) {
-            usernameToUUID.inverse().put(uuid, player.getName());
-        }
+		if (!usernameToUUID.inverse().containsKey(uuid)) {
+			usernameToUUID.inverse().put(uuid, player.getName());
+		}
 
-        lastSeenName.put(uuid, player.getName());
+		lastSeenName.put(uuid, player.getName());
 
-        try {
-            accounts.createOrUpdate(account);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+		try {
+			accounts.createOrUpdate(account);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public static void dropUsername(final Player player) {
-        final UUID uuid = player.getUniqueId();
+	public static void dropUsername(final Player player) {
+		final UUID uuid = player.getUniqueId();
 
-        if (usernameToUUID.containsValue(uuid)) {
-            usernameToUUID.inverse().remove(uuid);
-        }
+		if (usernameToUUID.containsValue(uuid)) {
+			usernameToUUID.inverse().remove(uuid);
+		}
 
-        String shortName = NameUtil.stripUsername(player.getName());
+		String shortName = NameUtil.stripUsername(player.getName());
 
-        if (shortToLongName.containsKey(shortName)) {
-            shortToLongName.remove(shortName);
-        }
-    }
+		if (shortToLongName.containsKey(shortName)) {
+			shortToLongName.remove(shortName);
+		}
+	}
 
-    public static boolean canUseName(Player player, String name) {
-        String shortenedName = NameUtil.stripUsername(getUsername(player.getUniqueId()));
+	public static boolean canUseName(Player player, String name) {
+		String shortenedName = NameUtil.stripUsername(getUsername(player.getUniqueId()));
 
-        if (ChestShopSign.isAdminShop(name)) {
-            return false;
-        }
+		if (ChestShopSign.isAdminShop(name)) {
+			return false;
+		}
 
-        return shortenedName.equals(name) || Permission.otherName(player, name) || player.getUniqueId().equals(getUUID(name));
-    }
+		return shortenedName.equals(name) || Permission.otherName(player, name) || player.getUniqueId().equals(getUUID(name));
+	}
 
-    public static boolean isAdminShop(UUID uuid) {
-        return Properties.ADMIN_SHOP_NAME.equals(getUsername(uuid));
-    }
+	public static boolean isAdminShop(UUID uuid) {
+		return Properties.ADMIN_SHOP_NAME.equals(getUsername(uuid));
+	}
 
-    public static void load() {
-        try {
-            accounts = DaoCreator.getDaoAndCreateTable(Account.class);
+	public static void load() {
+		try {
+			accounts = DaoCreator.getDaoAndCreateTable(Account.class);
 
-            Account adminAccount = new Account(Properties.ADMIN_SHOP_NAME, Bukkit.getOfflinePlayer(Properties.ADMIN_SHOP_NAME).getUniqueId());
-            accounts.createOrUpdate(adminAccount);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+			Account adminAccount = new Account(Properties.ADMIN_SHOP_NAME, Bukkit.getOfflinePlayer(Properties.ADMIN_SHOP_NAME).getUniqueId());
+			accounts.createOrUpdate(adminAccount);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

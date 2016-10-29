@@ -16,56 +16,56 @@ import java.util.List;
  * @author KingFaris10
  */
 public class Toggle implements CommandExecutor {
-    private static final List<String> toggledPlayers = new ArrayList<String>();
+	private static final List<String> toggledPlayers = new ArrayList<String>();
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            return false;
-        }
+	public static void clearToggledPlayers() {
+		toggledPlayers.clear();
+	}
 
-        if (!Permission.has(sender, Permission.NOTIFY_TOGGLE)) {
-            sender.sendMessage(Messages.ACCESS_DENIED);
-            return true;
-        }
+	public static boolean isIgnoring(OfflinePlayer player) {
+		return player != null && toggledPlayers.contains(player.getName());
+	}
 
-        Player player = (Player) sender;
+	public static boolean setIgnoring(Player player, boolean ignoring) {
+		Validate.notNull(player); // Make sure the player instance is not null, in case there are any errors in the code
 
-        if (args.length != 0) {
-            return false;
-        }
+		if (ignoring) {
+			if (!toggledPlayers.contains(player.getName())) {
+				toggledPlayers.add(player.getName());
+			}
+		} else {
+			if (toggledPlayers.contains(player.getName())) {
+				toggledPlayers.remove(player.getName());
+			}
+		}
 
-        if (setIgnoring(player, !toggledPlayers.contains(player.getName()))) {
-            player.sendMessage(Messages.prefix(Messages.TOGGLE_MESSAGES_OFF));
-        } else {
-            player.sendMessage(Messages.prefix(Messages.TOGGLE_MESSAGES_ON));
-        }
+		return ignoring;
+	}
 
-        return true;
-    }
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (!(sender instanceof Player)) {
+			return false;
+		}
 
-    public static void clearToggledPlayers() {
-        toggledPlayers.clear();
-    }
+		if (!Permission.has(sender, Permission.NOTIFY_TOGGLE)) {
+			sender.sendMessage(Messages.ACCESS_DENIED);
+			return true;
+		}
 
-    public static boolean isIgnoring(OfflinePlayer player) {
-        return player != null && toggledPlayers.contains(player.getName());
-    }
+		Player player = (Player) sender;
 
-    public static boolean setIgnoring(Player player, boolean ignoring) {
-        Validate.notNull(player); // Make sure the player instance is not null, in case there are any errors in the code
+		if (args.length != 0) {
+			return false;
+		}
 
-        if (ignoring) {
-            if (!toggledPlayers.contains(player.getName())) {
-                toggledPlayers.add(player.getName());
-            }
-        } else {
-            if (toggledPlayers.contains(player.getName())) {
-                toggledPlayers.remove(player.getName());
-            }
-        }
+		if (setIgnoring(player, !toggledPlayers.contains(player.getName()))) {
+			player.sendMessage(Messages.prefix(Messages.TOGGLE_MESSAGES_OFF));
+		} else {
+			player.sendMessage(Messages.prefix(Messages.TOGGLE_MESSAGES_ON));
+		}
 
-        return ignoring;
-    }
+		return true;
+	}
 
 }

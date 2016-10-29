@@ -14,119 +14,119 @@ import org.bukkit.inventory.ItemStack;
  * @author Acrobot
  */
 public class TransactionEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
-    private final TransactionType type;
+	private static final HandlerList handlers = new HandlerList();
+	private final TransactionType type;
 
-    private final Inventory ownerInventory;
-    private final Inventory clientInventory;
+	private final Inventory ownerInventory;
+	private final Inventory clientInventory;
 
-    private final Player client;
-    private final OfflinePlayer owner;
+	private final Player client;
+	private final OfflinePlayer owner;
 
-    private final ItemStack[] stock;
-    private final double price;
+	private final ItemStack[] stock;
+	private final double price;
 
-    private final Sign sign;
+	private final Sign sign;
 
-    public TransactionEvent(PreTransactionEvent event, Sign sign) {
-        this.type = event.getTransactionType();
+	public TransactionEvent(PreTransactionEvent event, Sign sign) {
+		this.type = event.getTransactionType();
 
-        this.ownerInventory = event.getOwnerInventory();
-        this.clientInventory = event.getClientInventory();
+		this.ownerInventory = event.getOwnerInventory();
+		this.clientInventory = event.getClientInventory();
 
-        this.client = event.getClient();
-        this.owner = event.getOwner();
+		this.client = event.getClient();
+		this.owner = event.getOwner();
 
-        this.stock = event.getStock();
-        this.price = event.getPrice();
+		this.stock = event.getStock();
+		this.price = event.getPrice();
 
-        this.sign = sign;
-    }
+		this.sign = sign;
+	}
 
-    public TransactionEvent(TransactionType type, Inventory ownerInventory, Inventory clientInventory, Player client, OfflinePlayer owner, ItemStack[] stock, double price, Sign sign) {
-        this.type = type;
+	public TransactionEvent(TransactionType type, Inventory ownerInventory, Inventory clientInventory, Player client, OfflinePlayer owner, ItemStack[] stock, double price, Sign sign) {
+		this.type = type;
 
-        this.ownerInventory = ownerInventory;
-        this.clientInventory = clientInventory;
+		this.ownerInventory = ownerInventory;
+		this.clientInventory = clientInventory;
 
-        this.client = client;
-        this.owner = owner;
+		this.client = client;
+		this.owner = owner;
 
-        this.stock = stock;
-        this.price = price;
+		this.stock = stock;
+		this.price = price;
 
-        this.sign = sign;
-    }
+		this.sign = sign;
+	}
 
-    /**
-     * @return Type of the transaction
-     */
-    public TransactionType getTransactionType() {
-        return type;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * @return Owner's inventory
-     */
-    public Inventory getOwnerInventory() {
-        return ownerInventory;
-    }
+	/**
+	 * @return Type of the transaction
+	 */
+	public TransactionType getTransactionType() {
+		return type;
+	}
 
-    /**
-     * @return Client's inventory
-     */
-    public Inventory getClientInventory() {
-        return clientInventory;
-    }
+	/**
+	 * @return Owner's inventory
+	 */
+	public Inventory getOwnerInventory() {
+		return ownerInventory;
+	}
 
-    /**
-     * @return Shop's client
-     */
-    public Player getClient() {
-        return client;
-    }
+	/**
+	 * @return Client's inventory
+	 */
+	public Inventory getClientInventory() {
+		return clientInventory;
+	}
 
-    /**
-     * @return Shop's owner
-     */
-    public OfflinePlayer getOwner() {
-        return owner;
-    }
+	/**
+	 * @return Shop's client
+	 */
+	public Player getClient() {
+		return client;
+	}
 
-    /**
-     * @return Stock available
-     */
-    public ItemStack[] getStock() {
-        return stock;
-    }
+	/**
+	 * @return Shop's owner
+	 */
+	public OfflinePlayer getOwner() {
+		return owner;
+	}
 
-    /**
-     * @return Total price of the items
-     */
-    public double getPrice() {
-        return price;
-    }
+	/**
+	 * @return Stock available
+	 */
+	public ItemStack[] getStock() {
+		return stock;
+	}
 
-    /**
-     * @return Shop's sign
-     */
-    public Sign getSign() {
-        return sign;
-    }
+	/**
+	 * @return Total price of the items
+	 */
+	public double getPrice() {
+		return price;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	/**
+	 * @return Shop's sign
+	 */
+	public Sign getSign() {
+		return sign;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 
-    /**
-     * Possible transaction types
-     */
-    public enum TransactionType {
-        BUY,
-        SELL
-    }
+	/**
+	 * Possible transaction types
+	 */
+	public enum TransactionType {
+		BUY,
+		SELL
+	}
 }

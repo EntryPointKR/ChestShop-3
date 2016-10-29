@@ -23,29 +23,29 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  * @author Acrobot
  */
 public class ShopRefundListener implements Listener {
-    @EventHandler(priority = EventPriority.MONITOR)
-    public static void onShopDestroy(ShopDestroyedEvent event) {
-        double refundPrice = Properties.SHOP_REFUND_PRICE;
+	@EventHandler(priority = EventPriority.MONITOR)
+	public static void onShopDestroy(ShopDestroyedEvent event) {
+		double refundPrice = Properties.SHOP_REFUND_PRICE;
 
-        if (event.getDestroyer() == null || Permission.has(event.getDestroyer(), NOFEE) || refundPrice == 0) {
-            return;
-        }
+		if (event.getDestroyer() == null || Permission.has(event.getDestroyer(), NOFEE) || refundPrice == 0) {
+			return;
+		}
 
-        String ownerName = NameManager.getFullUsername(event.getSign().getLine(NAME_LINE));
-        UUID owner = NameManager.getUUID(ownerName);
+		String ownerName = NameManager.getFullUsername(event.getSign().getLine(NAME_LINE));
+		UUID owner = NameManager.getUUID(ownerName);
 
-        CurrencyAddEvent currencyEvent = new CurrencyAddEvent(BigDecimal.valueOf(refundPrice), owner, event.getSign().getWorld());
-        ChestShop.callEvent(currencyEvent);
+		CurrencyAddEvent currencyEvent = new CurrencyAddEvent(BigDecimal.valueOf(refundPrice), owner, event.getSign().getWorld());
+		ChestShop.callEvent(currencyEvent);
 
-        if (!Economy.getServerAccountName().isEmpty()) {
-            CurrencySubtractEvent currencySubtractEvent = new CurrencySubtractEvent(
-                    BigDecimal.valueOf(refundPrice),
-                    NameManager.getUUID(Economy.getServerAccountName()),
-                    event.getSign().getWorld());
-            ChestShop.callEvent(currencySubtractEvent);
-        }
+		if (!Economy.getServerAccountName().isEmpty()) {
+			CurrencySubtractEvent currencySubtractEvent = new CurrencySubtractEvent(
+					BigDecimal.valueOf(refundPrice),
+					NameManager.getUUID(Economy.getServerAccountName()),
+					event.getSign().getWorld());
+			ChestShop.callEvent(currencySubtractEvent);
+		}
 
-        String message = Messages.SHOP_REFUNDED.replace("%amount", Economy.formatBalance(refundPrice));
-        event.getDestroyer().sendMessage(Messages.prefix(message));
-    }
+		String message = Messages.SHOP_REFUNDED.replace("%amount", Economy.formatBalance(refundPrice));
+		event.getDestroyer().sendMessage(Messages.prefix(message));
+	}
 }

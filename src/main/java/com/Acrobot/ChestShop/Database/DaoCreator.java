@@ -19,41 +19,43 @@ import java.sql.SQLException;
  */
 public class DaoCreator {
 
-    /**
-     * Returns a DAO for the given entity and with the given ID
-     * @param entity Entity's class
-     * @param <ENTITY> Type of the entity
-     * @return Dao
-     * @throws InvalidParameterException
-     * @throws SQLException
-     */
-    public static <ENTITY, ID> Dao<ENTITY, ID> getDao(Class<ENTITY> entity) throws InvalidParameterException, SQLException {
-        if (!entity.isAnnotationPresent(DatabaseFileName.class)) {
-            throw new InvalidParameterException("Entity not annotated with @DatabaseFileName!");
-        }
+	/**
+	 * Returns a DAO for the given entity and with the given ID
+	 *
+	 * @param entity   Entity's class
+	 * @param <ENTITY> Type of the entity
+	 * @return Dao
+	 * @throws InvalidParameterException
+	 * @throws SQLException
+	 */
+	public static <ENTITY, ID> Dao<ENTITY, ID> getDao(Class<ENTITY> entity) throws InvalidParameterException, SQLException {
+		if (!entity.isAnnotationPresent(DatabaseFileName.class)) {
+			throw new InvalidParameterException("Entity not annotated with @DatabaseFileName!");
+		}
 
-        String fileName = entity.getAnnotation(DatabaseFileName.class).value();
-        String uri = ConnectionManager.getURI(ChestShop.loadFile(fileName));
+		String fileName = entity.getAnnotation(DatabaseFileName.class).value();
+		String uri = ConnectionManager.getURI(ChestShop.loadFile(fileName));
 
-        ConnectionSource connectionSource = new JdbcConnectionSource(uri, new SqliteDatabaseType());
+		ConnectionSource connectionSource = new JdbcConnectionSource(uri, new SqliteDatabaseType());
 
-        Dao<ENTITY, ID> dao = DaoManager.createDao(connectionSource, entity);
-        dao.setObjectCache(new LruObjectCache(200));
+		Dao<ENTITY, ID> dao = DaoManager.createDao(connectionSource, entity);
+		dao.setObjectCache(new LruObjectCache(200));
 
-        return dao;
-    }
+		return dao;
+	}
 
-    /**
-     * Creates a dao as well as a default table, if doesn't exist
-     * @see #getDao(Class)
-     * @throws SQLException
-     * @throws InvalidParameterException
-     */
-    public static <ENTITY, ID> Dao<ENTITY, ID> getDaoAndCreateTable(Class<ENTITY> entity) throws SQLException, InvalidParameterException {
-        Dao<ENTITY, ID> dao = getDao(entity);
+	/**
+	 * Creates a dao as well as a default table, if doesn't exist
+	 *
+	 * @throws SQLException
+	 * @throws InvalidParameterException
+	 * @see #getDao(Class)
+	 */
+	public static <ENTITY, ID> Dao<ENTITY, ID> getDaoAndCreateTable(Class<ENTITY> entity) throws SQLException, InvalidParameterException {
+		Dao<ENTITY, ID> dao = getDao(entity);
 
-        TableUtils.createTableIfNotExists(dao.getConnectionSource(), entity);
+		TableUtils.createTableIfNotExists(dao.getConnectionSource(), entity);
 
-        return dao;
-    }
+		return dao;
+	}
 }

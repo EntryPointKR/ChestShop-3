@@ -15,121 +15,121 @@ import org.bukkit.plugin.PluginManager;
  * @author Acrobot
  */
 public class Dependencies {
-    public static void loadPlugins() {
-        PluginManager pluginManager = Bukkit.getPluginManager();
+	public static void loadPlugins() {
+		PluginManager pluginManager = Bukkit.getPluginManager();
 
-        for (String dependency : ChestShop.getDependencies()) {
-            Plugin plugin = pluginManager.getPlugin(dependency);
+		for (String dependency : ChestShop.getDependencies()) {
+			Plugin plugin = pluginManager.getPlugin(dependency);
 
-            if (plugin != null) {
-                initializePlugin(dependency, plugin);
-            }
-        }
+			if (plugin != null) {
+				initializePlugin(dependency, plugin);
+			}
+		}
 
-        loadEconomy();
-    }
+		loadEconomy();
+	}
 
-    private static void loadEconomy() {
-        String plugin = "Vault";
-        Listener economy = VaultListener.initializeVault();
+	private static void loadEconomy() {
+		String plugin = "Vault";
+		Listener economy = VaultListener.initializeVault();
 
-        if (economy == null) {
-            return;
-        }
+		if (economy == null) {
+			return;
+		}
 
-        ChestShop.registerListener(economy);
-        ChestShop.getBukkitLogger().info(plugin + " loaded! Found an economy plugin!");
-    }
+		ChestShop.registerListener(economy);
+		ChestShop.getBukkitLogger().info(plugin + " loaded! Found an economy plugin!");
+	}
 
-    private static void initializePlugin(String name, Plugin plugin) { //Really messy, right? But it's short and fast :)
-        Dependency dependency;
+	private static void initializePlugin(String name, Plugin plugin) { //Really messy, right? But it's short and fast :)
+		Dependency dependency;
 
-        try {
-            dependency = Dependency.valueOf(name);
-        } catch (IllegalArgumentException exception) {
-            return;
-        }
+		try {
+			dependency = Dependency.valueOf(name);
+		} catch (IllegalArgumentException exception) {
+			return;
+		}
 
-        Listener listener = null;
+		Listener listener = null;
 
-        switch (dependency) {
-            //Protection plugins
-            case LWC:
-                listener = new LightweightChestProtection();
-                break;
-            case Lockette:
-                listener = new Lockette();
-                break;
-            case Deadbolt:
-                listener = new Deadbolt();
-                break;
-            case SimpleChestLock:
-                listener = SimpleChestLock.getSimpleChestLock(plugin);
-                break;
-            case Residence:
-                if (plugin.getDescription().getVersion().startsWith("2")) {
-                    ChestShop.getBukkitLogger().severe("You are using an old version of Residence! " +
-                            "Please update to the newest one, which supports UUIDs: http://ci.drtshock.net/job/Residence/");
+		switch (dependency) {
+			//Protection plugins
+			case LWC:
+				listener = new LightweightChestProtection();
+				break;
+			case Lockette:
+				listener = new Lockette();
+				break;
+			case Deadbolt:
+				listener = new Deadbolt();
+				break;
+			case SimpleChestLock:
+				listener = SimpleChestLock.getSimpleChestLock(plugin);
+				break;
+			case Residence:
+				if (plugin.getDescription().getVersion().startsWith("2")) {
+					ChestShop.getBukkitLogger().severe("You are using an old version of Residence! " +
+							"Please update to the newest one, which supports UUIDs: http://ci.drtshock.net/job/Residence/");
 
-                    break;
-                }
+					break;
+				}
 
-                listener = new ResidenceChestProtection();
-                break;
+				listener = new ResidenceChestProtection();
+				break;
 
-            //Terrain protection plugins
-            case WorldGuard:
-                WorldGuardPlugin worldGuard = (WorldGuardPlugin) plugin;
-                boolean inUse = Properties.WORLDGUARD_USE_PROTECTION || Properties.WORLDGUARD_INTEGRATION;
+			//Terrain protection plugins
+			case WorldGuard:
+				WorldGuardPlugin worldGuard = (WorldGuardPlugin) plugin;
+				boolean inUse = Properties.WORLDGUARD_USE_PROTECTION || Properties.WORLDGUARD_INTEGRATION;
 
-                if (!inUse) {
-                    return;
-                }
+				if (!inUse) {
+					return;
+				}
 
-                if (Properties.WORLDGUARD_USE_PROTECTION) {
-                    ChestShop.registerListener(new WorldGuardProtection(worldGuard));
-                }
+				if (Properties.WORLDGUARD_USE_PROTECTION) {
+					ChestShop.registerListener(new WorldGuardProtection(worldGuard));
+				}
 
-                if (Properties.WORLDGUARD_INTEGRATION) {
-                    listener = new WorldGuardBuilding(worldGuard);
-                }
+				if (Properties.WORLDGUARD_INTEGRATION) {
+					listener = new WorldGuardBuilding(worldGuard);
+				}
 
-                break;
+				break;
 
-            //Other plugins
-            case Heroes:
-                Heroes heroes = Heroes.getHeroes(plugin);
+//            //Other plugins
+//            case Heroes:
+//                Heroes heroes = Heroes.getHeroes(plugin);
+//
+//                if (heroes == null) {
+//                    return;
+//                }
+//
+//                listener = heroes;
+//                break;
+			case OddItem:
+				MaterialUtil.Odd.initialize();
+				break;
+		}
 
-                if (heroes == null) {
-                    return;
-                }
+		if (listener != null) {
+			ChestShop.registerListener(listener);
+		}
 
-                listener = heroes;
-                break;
-            case OddItem:
-                MaterialUtil.Odd.initialize();
-                break;
-        }
+		PluginDescriptionFile description = plugin.getDescription();
+		ChestShop.getBukkitLogger().info(description.getName() + " version " + description.getVersion() + " loaded.");
+	}
 
-        if (listener != null) {
-            ChestShop.registerListener(listener);
-        }
+	private static enum Dependency {
+		LWC,
+		Lockette,
+		Deadbolt,
+		SimpleChestLock,
+		Residence,
 
-        PluginDescriptionFile description = plugin.getDescription();
-        ChestShop.getBukkitLogger().info(description.getName() + " version " + description.getVersion() + " loaded.");
-    }
+		OddItem,
 
-    private static enum Dependency {
-        LWC,
-        Lockette,
-        Deadbolt,
-        SimpleChestLock,
-        Residence,
+		WorldGuard,
 
-        OddItem,
-
-        WorldGuard,
-
-        Heroes
-    }
+		Heroes
+	}
 }

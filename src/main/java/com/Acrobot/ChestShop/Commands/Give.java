@@ -20,80 +20,80 @@ import java.util.List;
  */
 public class Give implements CommandExecutor {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!Permission.has(sender, Permission.ADMIN)) {
-            sender.sendMessage(Messages.prefix(Messages.ACCESS_DENIED));
-            return true;
-        }
+	private static ItemStack getItem(String[] arguments, List<Integer> disregardedElements) {
+		StringBuilder builder = new StringBuilder(arguments.length * 5);
 
-        if (args.length < 1) {
-            return false;
-        }
+		for (int index = 0; index < arguments.length; ++index) {
+			if (disregardedElements.contains(index)) {
+				continue;
+			}
 
-        Player receiver = (sender instanceof Player ? (Player) sender : null);
-        int quantity = 1;
+			builder.append(arguments[index]).append(' ');
+		}
 
-        List<Integer> disregardedIndexes = new ArrayList<Integer>();
+		return MaterialUtil.getItem(builder.toString());
+	}
 
-        if (args.length > 1) {
-            for (int index = args.length - 1; index >= 0; --index) {
-                Player target = Bukkit.getPlayer(args[index]);
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (!Permission.has(sender, Permission.ADMIN)) {
+			sender.sendMessage(Messages.prefix(Messages.ACCESS_DENIED));
+			return true;
+		}
 
-                if (target == null) {
-                    continue;
-                }
+		if (args.length < 1) {
+			return false;
+		}
 
-                receiver = target;
-                disregardedIndexes.add(index);
-                break;
-            }
+		Player receiver = (sender instanceof Player ? (Player) sender : null);
+		int quantity = 1;
 
-            for (int index = args.length - 1; index >= 0; --index) {
-                if (!NumberUtil.isInteger(args[index]) || Integer.parseInt(args[index]) < 0) {
-                    continue;
-                }
+		List<Integer> disregardedIndexes = new ArrayList<Integer>();
 
-                quantity = Integer.parseInt(args[index]);
-                disregardedIndexes.add(index);
+		if (args.length > 1) {
+			for (int index = args.length - 1; index >= 0; --index) {
+				Player target = Bukkit.getPlayer(args[index]);
 
-                break;
-            }
-        }
+				if (target == null) {
+					continue;
+				}
 
-        if (receiver == null) {
-            sender.sendMessage(Messages.prefix(Messages.PLAYER_NOT_FOUND));
-            return true;
-        }
+				receiver = target;
+				disregardedIndexes.add(index);
+				break;
+			}
 
-        ItemStack item = getItem(args, disregardedIndexes);
+			for (int index = args.length - 1; index >= 0; --index) {
+				if (!NumberUtil.isInteger(args[index]) || Integer.parseInt(args[index]) < 0) {
+					continue;
+				}
 
-        if (MaterialUtil.isEmpty(item)) {
-            sender.sendMessage(Messages.prefix(Messages.INCORRECT_ITEM_ID));
-            return true;
-        }
+				quantity = Integer.parseInt(args[index]);
+				disregardedIndexes.add(index);
 
-        item.setAmount(quantity);
-        InventoryUtil.add(item, receiver.getInventory());
+				break;
+			}
+		}
 
-        sender.sendMessage(Messages.prefix(Messages.ITEM_GIVEN
-                .replace("%item", MaterialUtil.getName(item))
-                .replace("%player", receiver.getName())));
+		if (receiver == null) {
+			sender.sendMessage(Messages.prefix(Messages.PLAYER_NOT_FOUND));
+			return true;
+		}
 
-        return true;
-    }
+		ItemStack item = getItem(args, disregardedIndexes);
 
-    private static ItemStack getItem(String[] arguments, List<Integer> disregardedElements) {
-        StringBuilder builder = new StringBuilder(arguments.length * 5);
+		if (MaterialUtil.isEmpty(item)) {
+			sender.sendMessage(Messages.prefix(Messages.INCORRECT_ITEM_ID));
+			return true;
+		}
 
-        for (int index = 0; index < arguments.length; ++index) {
-            if (disregardedElements.contains(index)) {
-                continue;
-            }
+		item.setAmount(quantity);
+		InventoryUtil.add(item, receiver.getInventory());
 
-            builder.append(arguments[index]).append(' ');
-        }
+		sender.sendMessage(Messages.prefix(Messages.ITEM_GIVEN
+				.replace("%item", MaterialUtil.getName(item))
+				.replace("%player", receiver.getName())));
 
-        return MaterialUtil.getItem(builder.toString());
-    }
+		return true;
+	}
 }

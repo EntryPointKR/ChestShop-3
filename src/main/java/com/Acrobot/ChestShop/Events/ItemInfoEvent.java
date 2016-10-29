@@ -11,35 +11,35 @@ import org.bukkit.inventory.ItemStack;
  * @author Acrobot
  */
 public class ItemInfoEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private CommandSender sender;
-    private ItemStack item;
+	private CommandSender sender;
+	private ItemStack item;
 
-    public ItemInfoEvent(CommandSender sender, ItemStack item) {
-        this.sender = sender;
-        this.item = item;
-    }
+	public ItemInfoEvent(CommandSender sender, ItemStack item) {
+		this.sender = sender;
+		this.item = item;
+	}
 
-    /**
-     * @return CommandSender who initiated the call
-     */
-    public CommandSender getSender() {
-        return sender;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * @return Item recognised by /iteminfo
-     */
-    public ItemStack getItem() {
-        return item;
-    }
+	/**
+	 * @return CommandSender who initiated the call
+	 */
+	public CommandSender getSender() {
+		return sender;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	/**
+	 * @return Item recognised by /iteminfo
+	 */
+	public ItemStack getItem() {
+		return item;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

@@ -13,10 +13,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConfigurationComment {
-    /**
-     * This option's comment
-     *
-     * @return Comment
-     */
-    public String value();
+	/**
+	 * This option's comment
+	 *
+	 * @return Comment
+	 */
+	public String value();
 }

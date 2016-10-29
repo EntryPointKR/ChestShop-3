@@ -11,51 +11,51 @@ import java.math.BigDecimal;
  * @author Acrobot
  */
 public class CurrencyFormatEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
-    private final BigDecimal amount;
-    private String formattedAmount = "";
+	private final BigDecimal amount;
+	private String formattedAmount = "";
 
-    public CurrencyFormatEvent(BigDecimal amount) {
-        this.amount = amount;
-    }
+	public CurrencyFormatEvent(BigDecimal amount) {
+		this.amount = amount;
+	}
 
-    /**
-     * @return Amount of currency
-     */
-    public BigDecimal getAmount() {
-        return amount;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    /**
-     * @return Amount of currency, as a double
-     * @deprecated Use {@link #getAmount()} if possible
-     */
-    public double getDoubleAmount() {
-        return amount.doubleValue();
-    }
+	/**
+	 * @return Amount of currency
+	 */
+	public BigDecimal getAmount() {
+		return amount;
+	}
 
-    /**
-     * @return Already formatted currency amount
-     */
-    public String getFormattedAmount() {
-        return formattedAmount;
-    }
+	/**
+	 * @return Amount of currency, as a double
+	 * @deprecated Use {@link #getAmount()} if possible
+	 */
+	public double getDoubleAmount() {
+		return amount.doubleValue();
+	}
 
-    /**
-     * Sets the currency formatting
-     *
-     * @param formattedAmount Formatted amount
-     */
-    public void setFormattedAmount(String formattedAmount) {
-        this.formattedAmount = formattedAmount;
-    }
+	/**
+	 * @return Already formatted currency amount
+	 */
+	public String getFormattedAmount() {
+		return formattedAmount;
+	}
 
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+	/**
+	 * Sets the currency formatting
+	 *
+	 * @param formattedAmount Formatted amount
+	 */
+	public void setFormattedAmount(String formattedAmount) {
+		this.formattedAmount = formattedAmount;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

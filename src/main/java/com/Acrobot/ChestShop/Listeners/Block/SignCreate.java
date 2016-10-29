@@ -18,31 +18,31 @@ import org.bukkit.event.block.SignChangeEvent;
  */
 public class SignCreate implements Listener {
 
-    @EventHandler
-    public static void onSignChange(SignChangeEvent event) {
-        Block signBlock = event.getBlock();
-        String[] line = StringUtil.stripColourCodes(event.getLines());
+	@EventHandler
+	public static void onSignChange(SignChangeEvent event) {
+		Block signBlock = event.getBlock();
+		String[] line = StringUtil.stripColourCodes(event.getLines());
 
-        if (!BlockUtil.isSign(signBlock)) {
-            return;
-        }
+		if (!BlockUtil.isSign(signBlock)) {
+			return;
+		}
 
-        if (!ChestShopSign.isValidPreparedSign(line)) {
-            return;
-        }
+		if (!ChestShopSign.isValidPreparedSign(line)) {
+			return;
+		}
 
-        PreShopCreationEvent preEvent = new PreShopCreationEvent(event.getPlayer(), (Sign) signBlock.getState(), line);
-        ChestShop.callEvent(preEvent);
+		PreShopCreationEvent preEvent = new PreShopCreationEvent(event.getPlayer(), (Sign) signBlock.getState(), line);
+		ChestShop.callEvent(preEvent);
 
-        if (preEvent.isCancelled()) {
-            return;
-        }
+		if (preEvent.isCancelled()) {
+			return;
+		}
 
-        for (byte i = 0; i < event.getLines().length; ++i) {
-            event.setLine(i, preEvent.getSignLine(i));
-        }
+		for (byte i = 0; i < event.getLines().length; ++i) {
+			event.setLine(i, preEvent.getSignLine(i));
+		}
 
-        ShopCreatedEvent postEvent = new ShopCreatedEvent(preEvent.getPlayer(), preEvent.getSign(), uBlock.findConnectedChest(preEvent.getSign()), preEvent.getSignLines());
-        ChestShop.callEvent(postEvent);
-    }
+		ShopCreatedEvent postEvent = new ShopCreatedEvent(preEvent.getPlayer(), preEvent.getSign(), uBlock.findConnectedChest(preEvent.getSign()), preEvent.getSignLines());
+		ChestShop.callEvent(postEvent);
+	}
 }

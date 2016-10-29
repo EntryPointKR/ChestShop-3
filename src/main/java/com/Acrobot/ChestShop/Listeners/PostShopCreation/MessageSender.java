@@ -11,8 +11,8 @@ import org.bukkit.event.Listener;
  */
 public class MessageSender implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public static void onShopCreation(ShopCreatedEvent event) {
-        event.getPlayer().sendMessage(Messages.prefix(Messages.SHOP_CREATED));
-    }
+	@EventHandler(priority = EventPriority.MONITOR)
+	public static void onShopCreation(ShopCreatedEvent event) {
+		event.getPlayer().sendMessage(Messages.prefix(Messages.SHOP_CREATED));
+	}
 }

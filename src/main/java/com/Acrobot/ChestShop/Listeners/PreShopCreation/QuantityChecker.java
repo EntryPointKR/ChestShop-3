@@ -14,12 +14,12 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.QUANTITY_LINE;
  */
 public class QuantityChecker implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        String quantity = event.getSignLine(QUANTITY_LINE);
+	@EventHandler(priority = EventPriority.LOWEST)
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		String quantity = event.getSignLine(QUANTITY_LINE);
 
-        if (!NumberUtil.isInteger(quantity)) {
-            event.setOutcome(INVALID_QUANTITY);
-        }
-    }
+		if (!NumberUtil.isInteger(quantity)) {
+			event.setOutcome(INVALID_QUANTITY);
+		}
+	}
 }

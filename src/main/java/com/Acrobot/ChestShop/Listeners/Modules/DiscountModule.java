@@ -22,44 +22,44 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.PRICE_LINE;
  * @author Acrobot
  */
 public class DiscountModule implements Listener {
-    private YamlConfiguration config;
-    private Set<String> groupList = new HashSet<String>();
+	private YamlConfiguration config;
+	private Set<String> groupList = new HashSet<String>();
 
-    public DiscountModule() {
-        config = YamlConfiguration.loadConfiguration(ChestShop.loadFile("discounts.yml"));
+	public DiscountModule() {
+		config = YamlConfiguration.loadConfiguration(ChestShop.loadFile("discounts.yml"));
 
-        config.options().header("This file is for discount management. You are able to do that:\n" +
-                "group1: 75\n" +
-                "That means that the person with ChestShop.discount.group1 permission will pay only 75% of the price. \n" +
-                "For example, if the price is 100 dollars, the player pays only 75 dollars.\n" +
-                "(Only works in buy-only Admin Shops!)");
+		config.options().header("This file is for discount management. You are able to do that:\n" +
+				"group1: 75\n" +
+				"That means that the person with ChestShop.discount.group1 permission will pay only 75% of the price. \n" +
+				"For example, if the price is 100 dollars, the player pays only 75 dollars.\n" +
+				"(Only works in buy-only Admin Shops!)");
 
-        try {
-            config.save(ChestShop.loadFile("discounts.yml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		try {
+			config.save(ChestShop.loadFile("discounts.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        groupList = config.getKeys(false);
-    }
+		groupList = config.getKeys(false);
+	}
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPreTransaction(PreTransactionEvent event) {
-        if (event.isCancelled() || event.getTransactionType() != BUY || !(event.getOwnerInventory() instanceof AdminInventory)) {
-            return;
-        }
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPreTransaction(PreTransactionEvent event) {
+		if (event.isCancelled() || event.getTransactionType() != BUY || !(event.getOwnerInventory() instanceof AdminInventory)) {
+			return;
+		}
 
-        Player client = event.getClient();
+		Player client = event.getClient();
 
-        if (!PriceUtil.hasBuyPrice(event.getSign().getLine(PRICE_LINE))) {
-            return;
-        }
+		if (!PriceUtil.hasBuyPrice(event.getSign().getLine(PRICE_LINE))) {
+			return;
+		}
 
-        for (String group : groupList) {
-            if (Permission.has(client, Permission.DISCOUNT + group)) {
-                event.setPrice(event.getPrice() * (config.getDouble(group) / 100));
-                return;
-            }
-        }
-    }
+		for (String group : groupList) {
+			if (Permission.has(client, Permission.DISCOUNT + group)) {
+				event.setPrice(event.getPrice() * (config.getDouble(group) / 100));
+				return;
+			}
+		}
+	}
 }

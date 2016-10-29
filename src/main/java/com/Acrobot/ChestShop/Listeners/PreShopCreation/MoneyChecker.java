@@ -21,29 +21,29 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  */
 public class MoneyChecker implements Listener {
 
-    @EventHandler
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        double shopCreationPrice = Properties.SHOP_CREATION_PRICE;
+	@EventHandler
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		double shopCreationPrice = Properties.SHOP_CREATION_PRICE;
 
-        if (shopCreationPrice == 0) {
-            return;
-        }
+		if (shopCreationPrice == 0) {
+			return;
+		}
 
-        if (ChestShopSign.isAdminShop(event.getSignLine(NAME_LINE))) {
-            return;
-        }
+		if (ChestShopSign.isAdminShop(event.getSignLine(NAME_LINE))) {
+			return;
+		}
 
-        Player player = event.getPlayer();
+		Player player = event.getPlayer();
 
-        if (Permission.has(player, NOFEE)) {
-            return;
-        }
+		if (Permission.has(player, NOFEE)) {
+			return;
+		}
 
-        CurrencyCheckEvent currencyCheckEvent = new CurrencyCheckEvent(BigDecimal.valueOf(shopCreationPrice), player);
-        ChestShop.callEvent(currencyCheckEvent);
+		CurrencyCheckEvent currencyCheckEvent = new CurrencyCheckEvent(BigDecimal.valueOf(shopCreationPrice), player);
+		ChestShop.callEvent(currencyCheckEvent);
 
-        if (!currencyCheckEvent.hasEnough()) {
-            event.setOutcome(NOT_ENOUGH_MONEY);
-        }
-    }
+		if (!currencyCheckEvent.hasEnough()) {
+			event.setOutcome(NOT_ENOUGH_MONEY);
+		}
+	}
 }

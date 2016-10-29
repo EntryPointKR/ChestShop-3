@@ -20,30 +20,30 @@ import static org.bukkit.event.EventPriority.HIGH;
  */
 public class PermissionChecker implements Listener {
 
-    @EventHandler(priority = HIGH)
-    public static void onPreShopCreation(PreShopCreationEvent event) {
-        Player player = event.getPlayer();
+	@EventHandler(priority = HIGH)
+	public static void onPreShopCreation(PreShopCreationEvent event) {
+		Player player = event.getPlayer();
 
-        if (Permission.has(player, ADMIN)) {
-            return;
-        }
+		if (Permission.has(player, ADMIN)) {
+			return;
+		}
 
-        String priceLine = event.getSignLine(PRICE_LINE);
-        String itemLine = event.getSignLine(ITEM_LINE);
+		String priceLine = event.getSignLine(PRICE_LINE);
+		String itemLine = event.getSignLine(ITEM_LINE);
 
-        ItemStack item = MaterialUtil.getItem(itemLine);
+		ItemStack item = MaterialUtil.getItem(itemLine);
 
-        if (item == null || Permission.has(player, SHOP_CREATION_ID + Integer.toString(item.getTypeId()))) {
-            return;
-        }
+		if (item == null || Permission.has(player, SHOP_CREATION_ID + Integer.toString(item.getTypeId()))) {
+			return;
+		}
 
-        if (PriceUtil.hasBuyPrice(priceLine) && !Permission.has(player, SHOP_CREATION_BUY)) {
-            event.setOutcome(NO_PERMISSION);
-            return;
-        }
+		if (PriceUtil.hasBuyPrice(priceLine) && !Permission.has(player, SHOP_CREATION_BUY)) {
+			event.setOutcome(NO_PERMISSION);
+			return;
+		}
 
-        if (PriceUtil.hasSellPrice(priceLine) && !Permission.has(player, SHOP_CREATION_SELL)) {
-            event.setOutcome(NO_PERMISSION);
-        }
-    }
+		if (PriceUtil.hasSellPrice(priceLine) && !Permission.has(player, SHOP_CREATION_SELL)) {
+			event.setOutcome(NO_PERMISSION);
+		}
+	}
 }

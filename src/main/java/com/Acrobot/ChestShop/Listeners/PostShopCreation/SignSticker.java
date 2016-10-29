@@ -19,49 +19,49 @@ import static com.Acrobot.ChestShop.Signs.ChestShopSign.NAME_LINE;
  */
 public class SignSticker implements Listener {
 
-    @EventHandler
-    public static void onShopCreation(ShopCreatedEvent event) {
-        if (!Properties.STICK_SIGNS_TO_CHESTS) {
-            return;
-        }
+	@EventHandler
+	public static void onShopCreation(ShopCreatedEvent event) {
+		if (!Properties.STICK_SIGNS_TO_CHESTS) {
+			return;
+		}
 
-        if (ChestShopSign.isAdminShop(event.getSign().getLine(NAME_LINE))) {
-            return;
-        }
+		if (ChestShopSign.isAdminShop(event.getSign().getLine(NAME_LINE))) {
+			return;
+		}
 
-        stickSign(event.getSign().getBlock(), event.getSignLines());
-    }
+		stickSign(event.getSign().getBlock(), event.getSignLines());
+	}
 
-    private static void stickSign(Block signBlock, String[] lines) {
-        if (signBlock.getType() != Material.SIGN_POST) {
-            return;
-        }
+	private static void stickSign(Block signBlock, String[] lines) {
+		if (signBlock.getType() != Material.SIGN_POST) {
+			return;
+		}
 
-        BlockFace chestFace = null;
+		BlockFace chestFace = null;
 
-        for (BlockFace face : uBlock.CHEST_EXTENSION_FACES) {
-            if (BlockUtil.isChest(signBlock.getRelative(face))) {
-                chestFace = face;
-                break;
-            }
-        }
+		for (BlockFace face : uBlock.CHEST_EXTENSION_FACES) {
+			if (BlockUtil.isChest(signBlock.getRelative(face))) {
+				chestFace = face;
+				break;
+			}
+		}
 
-        if (chestFace == null) {
-            return;
-        }
+		if (chestFace == null) {
+			return;
+		}
 
-        org.bukkit.material.Sign signMaterial = new org.bukkit.material.Sign(Material.WALL_SIGN);
-        signMaterial.setFacingDirection(chestFace.getOppositeFace());
+		org.bukkit.material.Sign signMaterial = new org.bukkit.material.Sign(Material.WALL_SIGN);
+		signMaterial.setFacingDirection(chestFace.getOppositeFace());
 
-        signBlock.setType(Material.WALL_SIGN);
-        signBlock.setData(signMaterial.getData());
+		signBlock.setType(Material.WALL_SIGN);
+		signBlock.setData(signMaterial.getData());
 
-        Sign sign = (Sign) signBlock.getState();
+		Sign sign = (Sign) signBlock.getState();
 
-        for (int i = 0; i < lines.length; ++i) {
-            sign.setLine(i, lines[i]);
-        }
+		for (int i = 0; i < lines.length; ++i) {
+			sign.setLine(i, lines[i]);
+		}
 
-        sign.update(true);
-    }
+		sign.update(true);
+	}
 }

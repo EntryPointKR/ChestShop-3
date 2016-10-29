@@ -11,21 +11,21 @@ import org.bukkit.event.Listener;
  * @author Acrobot
  */
 public class Deadbolt implements Listener {
-    @EventHandler
-    public static void onProtectionCheck(ProtectionCheckEvent event) {
-        if (event.getResult() == Event.Result.DENY) {
-            return;
-        }
+	@EventHandler
+	public static void onProtectionCheck(ProtectionCheckEvent event) {
+		if (event.getResult() == Event.Result.DENY) {
+			return;
+		}
 
-        Player player = event.getPlayer();
-        Block block = event.getBlock();
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
 
-        if (!com.daemitus.deadbolt.Deadbolt.isProtected(block)) {
-            return;
-        }
+		if (!com.daemitus.deadbolt.Deadbolt.isProtected(block)) {
+			return;
+		}
 
-        if (!com.daemitus.deadbolt.Deadbolt.isAuthorized(player, block)) {
-            event.setResult(Event.Result.DENY);
-        }
-    }
+		if (!com.daemitus.deadbolt.Deadbolt.isAuthorized(player, block)) {
+			event.setResult(Event.Result.DENY);
+		}
+	}
 }
